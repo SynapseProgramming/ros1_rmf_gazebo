@@ -28,6 +28,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
    FILES
    DoorMode.msg
+   DoorRequest.msg
  )
 
 generate_messages(
