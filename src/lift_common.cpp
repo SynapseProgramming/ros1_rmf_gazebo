@@ -135,86 +135,88 @@ void LiftCommon::update_lift_door_state() {
                                ? cabin_door_state
                                : LiftState::DOOR_MOVING;
 }
-/*
+
 LiftCommon::LiftCommon(
-    rclcpp::Node::SharedPtr node, const std::string &lift_name,
-    const std::string &joint_name, const MotionParams &cabin_motion_params,
+    const std::string &lift_name, const std::string &joint_name,
+    const MotionParams &cabin_motion_params,
     const std::vector<std::string> &floor_names,
     const std::unordered_map<std::string, double> &floor_name_to_elevation,
     std::unordered_map<std::string, std::vector<std::string>>
         floor_name_to_shaft_door_name,
     std::unordered_map<std::string, std::vector<std::string>>
         floor_name_to_cabin_door_name,
-    std::unordered_map<std::string, DoorState::SharedPtr> shaft_door_states,
-    std::unordered_map<std::string, DoorState::SharedPtr> cabin_door_states,
+    std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
+    std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
     std::string initial_floor_name)
-    : _ros_node(node), _lift_name(lift_name), _cabin_joint_name(joint_name),
+    : _lift_name(lift_name), _cabin_joint_name(joint_name),
       _cabin_motion_params(cabin_motion_params), _floor_names(floor_names),
       _floor_name_to_elevation(floor_name_to_elevation),
       _floor_name_to_shaft_door_name(floor_name_to_shaft_door_name),
       _floor_name_to_cabin_door_name(floor_name_to_cabin_door_name),
       _shaft_door_states(shaft_door_states),
       _cabin_door_states(cabin_door_states) {
-  // prints out available floors for this lift
-  std::cout << "Loaded lift: " << _lift_name << std::endl;
-  std::cout << "Names  |  Elevations" << std::endl;
-  for (const auto &it : _floor_name_to_elevation)
-    std::cout << it.first << "  |  " << it.second << std::endl;
+  /*
+// prints out available floors for this lift
+std::cout << "Loaded lift: " << _lift_name << std::endl;
+std::cout << "Names  |  Elevations" << std::endl;
+for (const auto &it : _floor_name_to_elevation)
+std::cout << it.first << "  |  " << it.second << std::endl;
 
-  // initialize pub & sub
-  _lift_state_pub = _ros_node->create_publisher<LiftState>(
-      "/lift_states", rclcpp::SystemDefaultsQoS());
+// initialize pub & sub
+_lift_state_pub = _ros_node->create_publisher<LiftState>(
+"/lift_states", rclcpp::SystemDefaultsQoS());
 
-  _door_request_pub = _ros_node->create_publisher<DoorRequest>(
-      "/adapter_door_requests", rclcpp::SystemDefaultsQoS());
+_door_request_pub = _ros_node->create_publisher<DoorRequest>(
+"/adapter_door_requests", rclcpp::SystemDefaultsQoS());
 
-  _lift_request_sub = _ros_node->create_subscription<LiftRequest>(
-      "/lift_requests", rclcpp::SystemDefaultsQoS(),
-      [&](LiftRequest::UniquePtr msg) {
-        if (msg->lift_name != _lift_name)
-          return;
+_lift_request_sub = _ros_node->create_subscription<LiftRequest>(
+"/lift_requests", rclcpp::SystemDefaultsQoS(),
+[&](LiftRequest::UniquePtr msg) {
+  if (msg->lift_name != _lift_name)
+    return;
 
-        if (_floor_name_to_elevation.find(msg->destination_floor) ==
-            _floor_name_to_elevation.end()) {
-          RCLCPP_INFO(logger(), "Received request for unavailable floor [%s]",
-                      msg->destination_floor.c_str());
-          return;
-        }
+  if (_floor_name_to_elevation.find(msg->destination_floor) ==
+      _floor_name_to_elevation.end()) {
+    RCLCPP_INFO(logger(), "Received request for unavailable floor [%s]",
+                msg->destination_floor.c_str());
+    return;
+  }
 
-        if (_lift_request) // Lift is still processing a previous request
-        {
-          RCLCPP_INFO(logger(), "Failed to request: [%s] is busy at the moment",
-                      _lift_name.c_str());
-          return;
-        }
+  if (_lift_request) // Lift is still processing a previous request
+  {
+    RCLCPP_INFO(logger(), "Failed to request: [%s] is busy at the moment",
+                _lift_name.c_str());
+    return;
+  }
 
-        _lift_request = std::move(msg);
-        RCLCPP_INFO(logger(), "Lift [%s] requested at level [%s]",
-                    _lift_name.c_str(),
-                    _lift_request->destination_floor.c_str());
-      });
+  _lift_request = std::move(msg);
+  RCLCPP_INFO(logger(), "Lift [%s] requested at level [%s]",
+              _lift_name.c_str(),
+              _lift_request->destination_floor.c_str());
+});
 
-  _door_state_sub = _ros_node->create_subscription<DoorState>(
-      "/door_states", rclcpp::SystemDefaultsQoS(),
-      [&](DoorState::SharedPtr msg) {
-        std::string name = msg->door_name;
-        if (_cabin_door_states.find(name) != _cabin_door_states.end())
-          _cabin_door_states[name] = std::move(msg);
-        else if (_shaft_door_states.find(name) != _shaft_door_states.end())
-          _shaft_door_states[name] = std::move(msg);
-      });
+_door_state_sub = _ros_node->create_subscription<DoorState>(
+"/door_states", rclcpp::SystemDefaultsQoS(),
+[&](DoorState::SharedPtr msg) {
+  std::string name = msg->door_name;
+  if (_cabin_door_states.find(name) != _cabin_door_states.end())
+    _cabin_door_states[name] = std::move(msg);
+  else if (_shaft_door_states.find(name) != _shaft_door_states.end())
+    _shaft_door_states[name] = std::move(msg);
+});
 
-  // Initial lift state
-  _lift_state.lift_name = _lift_name;
-  _lift_state.current_floor = _floor_names[0];
-  _lift_state.destination_floor = initial_floor_name;
-  _lift_state.door_state = LiftState::DOOR_CLOSED;
-  _lift_state.motion_state = LiftState::MOTION_STOPPED;
-  _lift_state.current_mode = LiftState::MODE_AGV;
-  for (const std::string &floor_name : _floor_names)
-    _lift_state.available_floors.push_back(floor_name);
+// Initial lift state
+_lift_state.lift_name = _lift_name;
+_lift_state.current_floor = _floor_names[0];
+_lift_state.destination_floor = initial_floor_name;
+_lift_state.door_state = LiftState::DOOR_CLOSED;
+_lift_state.motion_state = LiftState::MOTION_STOPPED;
+_lift_state.current_mode = LiftState::MODE_AGV;
+for (const std::string &floor_name : _floor_names)
+_lift_state.available_floors.push_back(floor_name);
+*/
 }
-
+/*
 void LiftCommon::pub_lift_state(const double time) {
   _last_pub_time = time;
   const int32_t t_sec = static_cast<int32_t>(time);
