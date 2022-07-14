@@ -40,7 +40,7 @@ public:
     printf("ToggleFloors::ToggleFloors()\n");
     node = gazebo::transport::NodePtr(new gazebo::transport::Node());
     node->Init();
-    // visual_pub = node->Advertise<gazebo::msgs::Visual>("~/visual");
+    visual_pub = node->Advertise<gazebo::msgs::Visual>("~/visual");
   }
 
   virtual ~ToggleFloors() {}
