@@ -91,6 +91,11 @@ private:
   void update_cabin_state(const double position, const double velocity);
 
   void move_doors(const double time, uint32_t door_mode);
+
+  void open_doors(const double time);
+
+  void close_doors(const double time);
+
   /*
       LiftCommon(
           rclcpp::Node::SharedPtr node, const std::string &lift_name,
@@ -105,14 +110,6 @@ private:
           std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
           std::string initial_floor_name);
 
-
-
-
-
-
-      void open_doors(const double time);
-
-      void close_doors(const double time);
 
       uint32_t get_door_state(
           const std::unordered_map<std::string, std::vector<std::string>>

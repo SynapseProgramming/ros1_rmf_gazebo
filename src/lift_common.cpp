@@ -88,7 +88,7 @@ void LiftCommon::move_doors(const double time, uint32_t door_mode) {
       publish_door_request(time, shaft_door, door_mode);
   }
 }
-/*
+
 void LiftCommon::open_doors(const double time) {
   move_doors(time, DoorMode::MODE_OPEN);
 }
@@ -96,7 +96,7 @@ void LiftCommon::open_doors(const double time) {
 void LiftCommon::close_doors(const double time) {
   move_doors(time, DoorMode::MODE_CLOSED);
 }
-
+/*
 uint32_t LiftCommon::get_door_state(
     const std::unordered_map<std::string, std::vector<std::string>>
         &floor_to_door_map,
