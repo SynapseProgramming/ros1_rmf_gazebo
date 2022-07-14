@@ -5,7 +5,7 @@
 
 namespace rmf_building_sim_common {
 
-// void LiftCommon::logger() { ROS_DEBUG("lift_" + _lift_state.lift_name); }
+void LiftCommon::logger() { std::cout << "lift_" + _lift_state.lift_name; }
 /*
 std::string LiftCommon::get_joint_name() const { return _cabin_joint_name; }
 

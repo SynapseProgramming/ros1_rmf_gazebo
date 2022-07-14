@@ -4,6 +4,7 @@
 // #include <rclcpp/logger.hpp>
 // #include <rclcpp/rclcpp.hpp>
 #include <ros/console.h>
+#include <ros/ros.h>
 
 #include "ros1_rmf_gazebo/DoorMode.h"
 #include "ros1_rmf_gazebo/DoorRequest.h"
@@ -13,6 +14,7 @@
 
 #include "ros1_rmf_gazebo/utils.h"
 
+#include <iostream>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -39,7 +41,7 @@ public:
   //                                         rclcpp::Node::SharedPtr node,
   //                                         SdfPtrT &sdf);
 
-  // void logger();
+  void logger();
   /*
     LiftUpdateResult update(const double time, const double position,
                             const double velocity);
