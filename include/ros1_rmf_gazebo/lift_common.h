@@ -50,9 +50,9 @@ public:
   std::string get_joint_name() const;
 
   double get_elevation() const;
-  /*
-          bool motion_state_changed();
-        */
+
+  bool motion_state_changed();
+
 private:
   // rclcpp::Node::SharedPtr _ros_node;
   // TODO: check out the existince of the pubs (change this to ros1 pubs)
@@ -65,8 +65,7 @@ private:
   std::string _cabin_joint_name;
 
   MotionParams _cabin_motion_params;
-  // TODO: check out if this works out
-  // LiftState::_motion_state_type _old_motion_state;
+  LiftState::_motion_state_type _old_motion_state;
 
   std::vector<std::string> _floor_names;
   std::unordered_map<std::string, double> _floor_name_to_elevation;
