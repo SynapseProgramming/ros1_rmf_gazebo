@@ -101,27 +101,28 @@ private:
           &floor_to_door_map,
       const std::unordered_map<std::string, DoorState::Ptr> &door_states);
 
+  void update_lift_door_state();
   /*
-      LiftCommon(
-          rclcpp::Node::SharedPtr node, const std::string &lift_name,
-          const std::string &joint_name, const MotionParams
-     &cabin_motion_params, const std::vector<std::string> &floor_names, const
-     std::unordered_map<std::string, double> &floor_name_to_elevation,
-          std::unordered_map<std::string, std::vector<std::string>>
-              floor_name_to_shaft_door_name,
-          std::unordered_map<std::string, std::vector<std::string>>
-              floor_name_to_cabin_door_name,
-          std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
-          std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
-          std::string initial_floor_name);
+    LiftCommon(
+        rclcpp::Node::SharedPtr node, const std::string &lift_name,
+        const std::string &joint_name, const MotionParams &cabin_motion_params,
+        const std::vector<std::string> &floor_names,
+        const std::unordered_map<std::string, double> &floor_name_to_elevation,
+        std::unordered_map<std::string, std::vector<std::string>>
+            floor_name_to_shaft_door_name,
+        std::unordered_map<std::string, std::vector<std::string>>
+            floor_name_to_cabin_door_name,
+        std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
+        std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
+        std::string initial_floor_name);
 
 
 
 
-      void pub_lift_state(const double time);
+          void pub_lift_state(const double time);
 
-      void update_lift_door_state();
-      */
+
+          */
 };
 
 // template <typename SdfPtrT>

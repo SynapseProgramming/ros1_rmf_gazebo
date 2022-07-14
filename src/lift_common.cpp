@@ -124,7 +124,7 @@ uint32_t LiftCommon::get_door_state(
   else
     return DoorMode::MODE_MOVING;
 }
-/*
+
 void LiftCommon::update_lift_door_state() {
   uint32_t cabin_door_state =
       get_door_state(_floor_name_to_cabin_door_name, _cabin_door_states);
@@ -135,7 +135,7 @@ void LiftCommon::update_lift_door_state() {
                                ? cabin_door_state
                                : LiftState::DOOR_MOVING;
 }
-
+/*
 LiftCommon::LiftCommon(
     rclcpp::Node::SharedPtr node, const std::string &lift_name,
     const std::string &joint_name, const MotionParams &cabin_motion_params,
