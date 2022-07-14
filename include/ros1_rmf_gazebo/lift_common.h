@@ -87,6 +87,8 @@ private:
 
   double get_step_velocity(const double dt, const double position,
                            const double velocity);
+
+  void update_cabin_state(const double position, const double velocity);
   /*
       LiftCommon(
           rclcpp::Node::SharedPtr node, const std::string &lift_name,
@@ -102,7 +104,7 @@ private:
           std::string initial_floor_name);
 
 
-      void update_cabin_state(const double position, const double velocity);
+
 
       void move_doors(const double time, uint32_t door_mode);
 

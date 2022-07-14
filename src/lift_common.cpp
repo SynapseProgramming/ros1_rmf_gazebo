@@ -45,8 +45,6 @@ double LiftCommon::get_step_velocity(const double dt, const double position,
   return compute_desired_rate_of_change(dz, velocity, _cabin_motion_params, dt);
 }
 
-/*
-
 void LiftCommon::update_cabin_state(const double position,
                                     const double velocity) {
   // TODO update current_floor only when lift reaches its destination
@@ -70,6 +68,7 @@ void LiftCommon::update_cabin_state(const double position,
     _lift_state.motion_state = LiftState::MOTION_DOWN;
 }
 
+/*
 void LiftCommon::move_doors(const double time, uint32_t door_mode) {
   auto cabin_door_names =
       _floor_name_to_cabin_door_name[_lift_state.current_floor];
