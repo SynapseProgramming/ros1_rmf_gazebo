@@ -29,6 +29,8 @@ add_message_files(
    FILES
    DoorMode.msg
    DoorRequest.msg
+   DoorState.msg
+   LiftRequest.msg
  )
 
 generate_messages(
