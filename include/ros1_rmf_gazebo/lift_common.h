@@ -96,6 +96,11 @@ private:
 
   void close_doors(const double time);
 
+  uint32_t get_door_state(
+      const std::unordered_map<std::string, std::vector<std::string>>
+          &floor_to_door_map,
+      const std::unordered_map<std::string, DoorState::Ptr> &door_states);
+
   /*
       LiftCommon(
           rclcpp::Node::SharedPtr node, const std::string &lift_name,
@@ -111,10 +116,7 @@ private:
           std::string initial_floor_name);
 
 
-      uint32_t get_door_state(
-          const std::unordered_map<std::string, std::vector<std::string>>
-              &floor_to_door_map,
-          const std::unordered_map<std::string, DoorState::Ptr> &door_states);
+
 
       void pub_lift_state(const double time);
 

@@ -96,11 +96,11 @@ void LiftCommon::open_doors(const double time) {
 void LiftCommon::close_doors(const double time) {
   move_doors(time, DoorMode::MODE_CLOSED);
 }
-/*
+
 uint32_t LiftCommon::get_door_state(
     const std::unordered_map<std::string, std::vector<std::string>>
         &floor_to_door_map,
-    const std::unordered_map<std::string, DoorState::SharedPtr> &door_states) {
+    const std::unordered_map<std::string, DoorState::Ptr> &door_states) {
   std::size_t open_count = 0;
   std::size_t closed_count = 0;
   const auto doors = floor_to_door_map.find(_lift_state.current_floor)->second;
@@ -124,7 +124,7 @@ uint32_t LiftCommon::get_door_state(
   else
     return DoorMode::MODE_MOVING;
 }
-
+/*
 void LiftCommon::update_lift_door_state() {
   uint32_t cabin_door_state =
       get_door_state(_floor_name_to_cabin_door_name, _cabin_door_states);
