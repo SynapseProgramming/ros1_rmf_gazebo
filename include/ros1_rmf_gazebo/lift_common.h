@@ -89,6 +89,8 @@ private:
                            const double velocity);
 
   void update_cabin_state(const double position, const double velocity);
+
+  void move_doors(const double time, uint32_t door_mode);
   /*
       LiftCommon(
           rclcpp::Node::SharedPtr node, const std::string &lift_name,
@@ -106,7 +108,7 @@ private:
 
 
 
-      void move_doors(const double time, uint32_t door_mode);
+
 
       void open_doors(const double time);
 

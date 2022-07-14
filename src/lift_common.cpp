@@ -68,7 +68,6 @@ void LiftCommon::update_cabin_state(const double position,
     _lift_state.motion_state = LiftState::MOTION_DOWN;
 }
 
-/*
 void LiftCommon::move_doors(const double time, uint32_t door_mode) {
   auto cabin_door_names =
       _floor_name_to_cabin_door_name[_lift_state.current_floor];
@@ -89,7 +88,7 @@ void LiftCommon::move_doors(const double time, uint32_t door_mode) {
       publish_door_request(time, shaft_door, door_mode);
   }
 }
-
+/*
 void LiftCommon::open_doors(const double time) {
   move_doors(time, DoorMode::MODE_OPEN);
 }
