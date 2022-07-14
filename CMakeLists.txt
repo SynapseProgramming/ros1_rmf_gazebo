@@ -14,6 +14,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 set (CMAKE_AUTOMOC ON)
 
+
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   gazebo_plugins
@@ -21,6 +23,17 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
 )
+
+
+add_message_files(
+   FILES
+   DoorMode.msg
+ )
+
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 catkin_package(
   INCLUDE_DIRS include
