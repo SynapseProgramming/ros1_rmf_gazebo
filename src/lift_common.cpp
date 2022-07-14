@@ -33,7 +33,7 @@ void LiftCommon::publish_door_request(const double time, std::string door_name,
   // TODO: uncomment this line after nodehandle has been added
   // _door_request_pub->publish(request);
 }
-/*
+
 double LiftCommon::get_step_velocity(const double dt, const double position,
                                      const double velocity) {
   double desired_elevation = get_elevation();
@@ -45,7 +45,7 @@ double LiftCommon::get_step_velocity(const double dt, const double position,
   return compute_desired_rate_of_change(dz, velocity, _cabin_motion_params, dt);
 }
 
-
+/*
 
 void LiftCommon::update_cabin_state(const double position,
                                     const double velocity) {

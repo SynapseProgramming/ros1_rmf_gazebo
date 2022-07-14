@@ -84,6 +84,9 @@ private:
 
   void publish_door_request(const double time, std::string door_name,
                             uint32_t door_state);
+
+  double get_step_velocity(const double dt, const double position,
+                           const double velocity);
   /*
       LiftCommon(
           rclcpp::Node::SharedPtr node, const std::string &lift_name,
@@ -98,8 +101,6 @@ private:
           std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
           std::string initial_floor_name);
 
-      double get_step_velocity(const double dt, const double position,
-                               const double velocity);
 
       void update_cabin_state(const double position, const double velocity);
 
