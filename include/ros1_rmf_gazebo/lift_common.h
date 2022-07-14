@@ -54,12 +54,12 @@ public:
   bool motion_state_changed();
 
 private:
-  // rclcpp::Node::SharedPtr _ros_node;
   // TODO: check out the existince of the pubs (change this to ros1 pubs)
-  // rclcpp::Publisher<LiftState>::SharedPtr _lift_state_pub;
-  // rclcpp::Publisher<DoorRequest>::SharedPtr _door_request_pub;
   // rclcpp::Subscription<LiftRequest>::SharedPtr _lift_request_sub;
   // rclcpp::Subscription<DoorState>::SharedPtr _door_state_sub;
+
+  ros::Publisher _lift_state_pub;
+  ros::Publisher _door_request_pub;
 
   std::string _lift_name;
   std::string _cabin_joint_name;
