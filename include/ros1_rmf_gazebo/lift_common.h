@@ -42,16 +42,17 @@ public:
   //                                         SdfPtrT &sdf);
 
   void logger();
+
+  // a lot of dependencies. dont port this first
+  // LiftUpdateResult update(const double time, const double position,
+  //                         const double velocity);
+
+  std::string get_joint_name() const;
   /*
-    LiftUpdateResult update(const double time, const double position,
-                            const double velocity);
+        double get_elevation() const;
 
-    std::string get_joint_name() const;
-
-    double get_elevation() const;
-
-    bool motion_state_changed();
-  */
+        bool motion_state_changed();
+      */
 private:
   // rclcpp::Node::SharedPtr _ros_node;
   // TODO: check out the existince of the pubs (change this to ros1 pubs)

@@ -5,10 +5,12 @@
 
 namespace rmf_building_sim_common {
 
-void LiftCommon::logger() { std::cout << "lift_" + _lift_state.lift_name; }
-/*
-std::string LiftCommon::get_joint_name() const { return _cabin_joint_name; }
+void LiftCommon::logger() {
+  std::cout << "lift_" + _lift_state.lift_name << "\n";
+}
 
+std::string LiftCommon::get_joint_name() const { return _cabin_joint_name; }
+/*
 double LiftCommon::get_elevation() const {
   return _floor_name_to_elevation.at(_lift_state.destination_floor);
 }
