@@ -31,6 +31,7 @@ add_message_files(
    DoorRequest.msg
    DoorState.msg
    LiftRequest.msg
+   LiftState.msg
  )
 
 generate_messages(
