@@ -115,6 +115,6 @@ public:
   }
 };
 
-// #include "toggle_floors.moc"
+#include "toggle_floors.moc"
 
 GZ_REGISTER_GUI_PLUGIN(ToggleFloors)

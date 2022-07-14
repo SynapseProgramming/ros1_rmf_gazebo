@@ -6,10 +6,13 @@ project(ros1_rmf_gazebo)
 
 find_package(catkin REQUIRED)
 find_package(gazebo REQUIRED)
-find_package(Qt5  REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Protobuf REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+set (CMAKE_AUTOMOC ON)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -53,13 +56,27 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 add_library(rmf_sim_utils src/utils.cpp)
 target_link_libraries(rmf_sim_utils ${GAZEBO_LIBRARIES})
 
-add_library(toggle_floors src/toggle_floors.cpp)
-target_link_libraries(toggle_floors ${GAZEBO_LIBRARIES} Qt5::Core
-    Qt5::Widgets)
+add_library(toggle_floors SHARED ${headers_MOC} src/toggle_floors.cpp)
+target_link_libraries(toggle_floors ${GAZEBO_LIBRARIES}
+  ${Qt5Core_LIBRARIES}
+  ${Qt5Widgets_LIBRARIES}
+  ${PROTOBUF_LIBRARIES})
+
+
+add_library(gui_example_spawn_widget SHARED ${headers_MOC}
+    src/GUIExampleSpawnWidget.cpp)
+target_link_libraries(gui_example_spawn_widget ${GAZEBO_LIBRARIES}
+  ${Qt5Core_LIBRARIES}
+  ${Qt5Widgets_LIBRARIES}
+  ${PROTOBUF_LIBRARIES})
+
+
 
 install(
   TARGETS
+  gui_example_spawn_widget
   rmf_sim_utils
+  toggle_floors
   DESTINATION
     ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION
