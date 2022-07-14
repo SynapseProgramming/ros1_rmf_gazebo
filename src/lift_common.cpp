@@ -22,18 +22,18 @@ bool LiftCommon::motion_state_changed() {
   return changed;
 }
 
-/*
 void LiftCommon::publish_door_request(const double time, std::string door_name,
                                       uint32_t door_state) {
   DoorRequest request;
-  request.request_time = rclcpp::Time(time);
+  request.request_time = ros::Time::now();
   request.requester_id = _lift_name;
   request.door_name = door_name;
   request.requested_mode.value = door_state;
 
-  _door_request_pub->publish(request);
+  // TODO: uncomment this line after nodehandle has been added
+  // _door_request_pub->publish(request);
 }
-
+/*
 double LiftCommon::get_step_velocity(const double dt, const double position,
                                      const double velocity) {
   double desired_elevation = get_elevation();

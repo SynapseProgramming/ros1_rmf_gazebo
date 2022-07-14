@@ -78,47 +78,46 @@ private:
 
   LiftState _lift_state;
   LiftRequest::Ptr _lift_request;
+  double _last_update_time = 0.0;
+  // random start time offset to prevent state message crossfire
+  double _last_pub_time = ((double)std::rand()) / ((double)(RAND_MAX));
+
+  void publish_door_request(const double time, std::string door_name,
+                            uint32_t door_state);
   /*
-    double _last_update_time = 0.0;
-    // random start time offset to prevent state message crossfire
-    double _last_pub_time = ((double)std::rand()) / ((double)(RAND_MAX));
+      LiftCommon(
+          rclcpp::Node::SharedPtr node, const std::string &lift_name,
+          const std::string &joint_name, const MotionParams
+     &cabin_motion_params, const std::vector<std::string> &floor_names, const
+     std::unordered_map<std::string, double> &floor_name_to_elevation,
+          std::unordered_map<std::string, std::vector<std::string>>
+              floor_name_to_shaft_door_name,
+          std::unordered_map<std::string, std::vector<std::string>>
+              floor_name_to_cabin_door_name,
+          std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
+          std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
+          std::string initial_floor_name);
 
-    void publish_door_request(const double time, std::string door_name,
-                              uint32_t door_state);
+      double get_step_velocity(const double dt, const double position,
+                               const double velocity);
 
-    LiftCommon(
-        rclcpp::Node::SharedPtr node, const std::string &lift_name,
-        const std::string &joint_name, const MotionParams &cabin_motion_params,
-        const std::vector<std::string> &floor_names,
-        const std::unordered_map<std::string, double> &floor_name_to_elevation,
-        std::unordered_map<std::string, std::vector<std::string>>
-            floor_name_to_shaft_door_name,
-        std::unordered_map<std::string, std::vector<std::string>>
-            floor_name_to_cabin_door_name,
-        std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
-        std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
-        std::string initial_floor_name);
+      void update_cabin_state(const double position, const double velocity);
 
-    double get_step_velocity(const double dt, const double position,
-                             const double velocity);
+      void move_doors(const double time, uint32_t door_mode);
 
-    void update_cabin_state(const double position, const double velocity);
+      void open_doors(const double time);
 
-    void move_doors(const double time, uint32_t door_mode);
+      void close_doors(const double time);
 
-    void open_doors(const double time);
+      uint32_t get_door_state(
+          const std::unordered_map<std::string, std::vector<std::string>>
+              &floor_to_door_map,
+          const std::unordered_map<std::string, DoorState::Ptr> &door_states);
 
-    void close_doors(const double time);
+      void pub_lift_state(const double time);
 
-    uint32_t get_door_state(
-        const std::unordered_map<std::string, std::vector<std::string>>
-            &floor_to_door_map,
-        const std::unordered_map<std::string, DoorState::Ptr> &door_states);
-
-    void pub_lift_state(const double time);
-
-    void update_lift_door_state();
-    */
+      void update_lift_door_state();
+      */
 };
 
 // template <typename SdfPtrT>
