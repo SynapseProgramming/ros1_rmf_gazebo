@@ -10,11 +10,11 @@ void LiftCommon::logger() {
 }
 
 std::string LiftCommon::get_joint_name() const { return _cabin_joint_name; }
-/*
+
 double LiftCommon::get_elevation() const {
   return _floor_name_to_elevation.at(_lift_state.destination_floor);
 }
-
+/*
 void LiftCommon::publish_door_request(const double time, std::string door_name,
                                       uint32_t door_state) {
   DoorRequest request;

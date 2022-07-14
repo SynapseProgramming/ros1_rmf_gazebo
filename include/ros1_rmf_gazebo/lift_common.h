@@ -48,11 +48,11 @@ public:
   //                         const double velocity);
 
   std::string get_joint_name() const;
-  /*
-        double get_elevation() const;
 
-        bool motion_state_changed();
-      */
+  double get_elevation() const;
+  /*
+          bool motion_state_changed();
+        */
 private:
   // rclcpp::Node::SharedPtr _ros_node;
   // TODO: check out the existince of the pubs (change this to ros1 pubs)
