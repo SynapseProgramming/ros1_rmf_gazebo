@@ -218,17 +218,17 @@ LiftCommon::LiftCommon(
   for (const std::string &floor_name : _floor_names)
     _lift_state.available_floors.push_back(floor_name);
 }
-/*
+
 void LiftCommon::pub_lift_state(const double time) {
   _last_pub_time = time;
   const int32_t t_sec = static_cast<int32_t>(time);
   const uint32_t t_nsec =
       static_cast<uint32_t>((time - static_cast<double>(t_sec)) * 1e9);
-  const rclcpp::Time now{t_sec, t_nsec, RCL_ROS_TIME};
+  ros::Time now = ros::Time(t_sec, t_nsec);
   _lift_state.lift_time = now;
-  _lift_state_pub->publish(_lift_state);
+  _lift_state_pub.publish(_lift_state);
 }
-
+/*
 LiftCommon::LiftUpdateResult LiftCommon::update(const double time,
                                                 const double position,
                                                 const double velocity) {

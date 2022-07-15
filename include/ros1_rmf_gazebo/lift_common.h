@@ -54,9 +54,6 @@ public:
   bool motion_state_changed();
 
 private:
-  // TODO: check out the existince of the pubs (change this to ros1 pubs)
-  // rclcpp::Subscription<LiftRequest>::SharedPtr _lift_request_sub;
-  // rclcpp::Subscription<DoorState>::SharedPtr _door_state_sub;
   ros::NodeHandle _ros_node;
 
   ros::Subscriber _lift_request_sub;
@@ -124,13 +121,7 @@ private:
   void liftRequestCallback(const LiftRequest::ConstPtr &msg);
   void doorStateCallback(const DoorState::ConstPtr &msg);
 
-  /*
-
-
-            void pub_lift_state(const double time);
-
-
-            */
+  void pub_lift_state(const double time);
 };
 
 // template <typename SdfPtrT>
