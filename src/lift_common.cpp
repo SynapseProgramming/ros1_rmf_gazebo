@@ -228,7 +228,7 @@ void LiftCommon::pub_lift_state(const double time) {
   _lift_state.lift_time = now;
   _lift_state_pub.publish(_lift_state);
 }
-/*
+
 LiftCommon::LiftUpdateResult LiftCommon::update(const double time,
                                                 const double position,
                                                 const double velocity) {
@@ -256,9 +256,9 @@ LiftCommon::LiftUpdateResult LiftCommon::update(const double time,
     if ((_lift_state.current_floor == desired_floor) &&
         (_lift_state.door_state == desired_door_state) &&
         (_lift_state.motion_state == LiftState::MOTION_STOPPED)) {
-      RCLCPP_INFO(logger(), "Reached floor %s with doors %s",
-                  desired_floor.c_str(),
-                  desired_door_state == 0 ? "closed" : "open");
+      // RCLCPP_INFO(logger(), "Reached floor %s with doors %s",
+      //             desired_floor.c_str(),
+      //             desired_door_state == 0 ? "closed" : "open");
       _lift_request = nullptr;
     } else {
       _lift_state.destination_floor = desired_floor;
@@ -288,5 +288,5 @@ LiftCommon::LiftUpdateResult LiftCommon::update(const double time,
 
   return result;
 }
-*/
+
 } // namespace rmf_building_sim_common

@@ -44,8 +44,8 @@ public:
   void logger();
 
   // a lot of dependencies. dont port this first
-  // LiftUpdateResult update(const double time, const double position,
-  //                         const double velocity);
+  LiftUpdateResult update(const double time, const double position,
+                          const double velocity);
 
   std::string get_joint_name() const;
 
