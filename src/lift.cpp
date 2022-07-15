@@ -2,12 +2,11 @@
 #include <gazebo/physics/Joint.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
-// #include <gazebo_ros/node.hpp>
-// #include <rclcpp/rclcpp.hpp>
 #include <ros/ros.h>
 
 #include "ros1_rmf_gazebo/lift_common.h"
 #include "ros1_rmf_gazebo/utils.h"
+#include <gazebo_plugins/gazebo_ros_utils.h>
 
 using namespace rmf_building_sim_common;
 
@@ -22,6 +21,8 @@ private:
   gazebo::physics::JointPtr _cabin_joint_ptr;
   // gazebo_ros::Node::SharedPtr _ros_node;
 
+  gazebo::GazeboRosPtr gazebo_ros_;
+
   std::unique_ptr<LiftCommon> _lift_common = nullptr;
 
   bool _initialized;
@@ -30,7 +31,14 @@ public:
   LiftPlugin() { _initialized = false; }
 
   void Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf) override {
+
+    gazebo_ros_ =
+        gazebo::GazeboRosPtr(new gazebo::GazeboRos(model, sdf, "Liftz"));
     // _ros_node = gazebo_ros::Node::Get(sdf);
+
+    gazebo_ros_->isInitialized();
+    std::cout << "PLUGIN LOADING!\n";
+
     _model = model;
 
     // RCLCPP_INFO(_ros_node->get_logger(), "Loading LiftPlugin for [%s]",
