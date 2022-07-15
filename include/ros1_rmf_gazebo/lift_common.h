@@ -60,6 +60,7 @@ private:
   ros::NodeHandle _ros_node;
 
   ros::Subscriber _lift_request_sub;
+  ros::Subscriber _door_state_sub;
 
   ros::Publisher _lift_state_pub;
   ros::Publisher _door_request_pub;
@@ -76,11 +77,12 @@ private:
       _floor_name_to_shaft_door_name;
   std::unordered_map<std::string, std::vector<std::string>>
       _floor_name_to_cabin_door_name;
-  std::unordered_map<std::string, DoorState::Ptr> _shaft_door_states;
-  std::unordered_map<std::string, DoorState::Ptr> _cabin_door_states;
+  std::unordered_map<std::string, DoorState::ConstPtr> _shaft_door_states;
+  std::unordered_map<std::string, DoorState::ConstPtr> _cabin_door_states;
 
   LiftState _lift_state;
   LiftRequest::ConstPtr _lift_request;
+
   double _last_update_time = 0.0;
   // random start time offset to prevent state message crossfire
   double _last_pub_time = ((double)std::rand()) / ((double)(RAND_MAX));
@@ -102,7 +104,7 @@ private:
   uint32_t get_door_state(
       const std::unordered_map<std::string, std::vector<std::string>>
           &floor_to_door_map,
-      const std::unordered_map<std::string, DoorState::Ptr> &door_states);
+      const std::unordered_map<std::string, DoorState::ConstPtr> &door_states);
 
   void update_lift_door_state();
 
@@ -115,11 +117,12 @@ private:
           floor_name_to_shaft_door_name,
       std::unordered_map<std::string, std::vector<std::string>>
           floor_name_to_cabin_door_name,
-      std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
-      std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
+      std::unordered_map<std::string, DoorState::ConstPtr> shaft_door_states,
+      std::unordered_map<std::string, DoorState::ConstPtr> cabin_door_states,
       std::string initial_floor_name);
 
   void liftRequestCallback(const LiftRequest::ConstPtr &msg);
+  void doorStateCallback(const DoorState::ConstPtr &msg);
 
   /*
 
@@ -143,8 +146,8 @@ std::unique_ptr<LiftCommon> LiftCommon::make(const std::string &lift_name,
       floor_name_to_shaft_door_name;
   std::unordered_map<std::string, std::vector<std::string>>
       floor_name_to_cabin_door_name;
-  std::unordered_map<std::string, DoorState::Ptr> shaft_door_states;
-  std::unordered_map<std::string, DoorState::Ptr> cabin_door_states;
+  std::unordered_map<std::string, DoorState::ConstPtr> shaft_door_states;
+  std::unordered_map<std::string, DoorState::ConstPtr> cabin_door_states;
 
   auto sdf_clone = sdf->Clone();
 

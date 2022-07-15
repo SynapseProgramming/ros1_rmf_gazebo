@@ -100,7 +100,7 @@ void LiftCommon::close_doors(const double time) {
 uint32_t LiftCommon::get_door_state(
     const std::unordered_map<std::string, std::vector<std::string>>
         &floor_to_door_map,
-    const std::unordered_map<std::string, DoorState::Ptr> &door_states) {
+    const std::unordered_map<std::string, DoorState::ConstPtr> &door_states) {
   std::size_t open_count = 0;
   std::size_t closed_count = 0;
   const auto doors = floor_to_door_map.find(_lift_state.current_floor)->second;
@@ -161,6 +161,15 @@ void LiftCommon::liftRequestCallback(const LiftRequest::ConstPtr &msg) {
   //             _lift_request->destination_floor.c_str());
 }
 
+void LiftCommon::doorStateCallback(const DoorState::ConstPtr &msg) {
+
+  std::string name = msg->door_name;
+  if (_cabin_door_states.find(name) != _cabin_door_states.end())
+    _cabin_door_states[name] = std::move(msg);
+  else if (_shaft_door_states.find(name) != _shaft_door_states.end())
+    _shaft_door_states[name] = std::move(msg);
+}
+
 LiftCommon::LiftCommon(
     const std::string &lift_name, const std::string &joint_name,
     const MotionParams &cabin_motion_params,
@@ -170,8 +179,8 @@ LiftCommon::LiftCommon(
         floor_name_to_shaft_door_name,
     std::unordered_map<std::string, std::vector<std::string>>
         floor_name_to_cabin_door_name,
-    std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
-    std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
+    std::unordered_map<std::string, DoorState::ConstPtr> shaft_door_states,
+    std::unordered_map<std::string, DoorState::ConstPtr> cabin_door_states,
     std::string initial_floor_name)
     : _lift_name(lift_name), _cabin_joint_name(joint_name),
       _cabin_motion_params(cabin_motion_params), _floor_names(floor_names),
@@ -196,27 +205,20 @@ LiftCommon::LiftCommon(
   _lift_request_sub = _ros_node.subscribe<LiftRequest>(
       "/lift_requests", 10, &LiftCommon::liftRequestCallback, this);
 
-  /*
-        _door_state_sub = _ros_node->create_subscription<DoorState>(
-        "/door_states", rclcpp::SystemDefaultsQoS(),
-        [&](DoorState::SharedPtr msg) {
-          std::string name = msg->door_name;
-          if (_cabin_door_states.find(name) != _cabin_door_states.end())
-            _cabin_door_states[name] = std::move(msg);
-          else if (_shaft_door_states.find(name) != _shaft_door_states.end())
-            _shaft_door_states[name] = std::move(msg);
-        });
+  _door_state_sub = _ros_node.subscribe<DoorState>(
+      "/door_states", 10, &LiftCommon::doorStateCallback, this);
 
-        // Initial lift state
-        _lift_state.lift_name = _lift_name;
-        _lift_state.current_floor = _floor_names[0];
-        _lift_state.destination_floor = initial_floor_name;
-        _lift_state.door_state = LiftState::DOOR_CLOSED;
-        _lift_state.motion_state = LiftState::MOTION_STOPPED;
-        _lift_state.current_mode = LiftState::MODE_AGV;
-        for (const std::string &floor_name : _floor_names)
-        _lift_state.available_floors.push_back(floor_name);
-        */
+  /*
+          // Initial lift state
+          _lift_state.lift_name = _lift_name;
+          _lift_state.current_floor = _floor_names[0];
+          _lift_state.destination_floor = initial_floor_name;
+          _lift_state.door_state = LiftState::DOOR_CLOSED;
+          _lift_state.motion_state = LiftState::MOTION_STOPPED;
+          _lift_state.current_mode = LiftState::MODE_AGV;
+          for (const std::string &floor_name : _floor_names)
+          _lift_state.available_floors.push_back(floor_name);
+          */
 }
 /*
 void LiftCommon::pub_lift_state(const double time) {
