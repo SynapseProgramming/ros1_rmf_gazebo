@@ -30,8 +30,7 @@ void LiftCommon::publish_door_request(const double time, std::string door_name,
   request.door_name = door_name;
   request.requested_mode.value = door_state;
 
-  // TODO: uncomment this line after nodehandle has been added
-  // _door_request_pub->publish(request);
+  _door_request_pub.publish(request);
 }
 
 double LiftCommon::get_step_velocity(const double dt, const double position,

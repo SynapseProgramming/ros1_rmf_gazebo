@@ -1,8 +1,6 @@
 #ifndef LIFT_COMMMON_H
 #define LIFT_COMMMON_H
 
-// #include <rclcpp/logger.hpp>
-// #include <rclcpp/rclcpp.hpp>
 #include <ros/console.h>
 #include <ros/ros.h>
 
