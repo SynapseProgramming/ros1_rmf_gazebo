@@ -57,6 +57,9 @@ private:
   // TODO: check out the existince of the pubs (change this to ros1 pubs)
   // rclcpp::Subscription<LiftRequest>::SharedPtr _lift_request_sub;
   // rclcpp::Subscription<DoorState>::SharedPtr _door_state_sub;
+  ros::NodeHandle _ros_node;
+
+  ros::Subscriber _lift_request_sub;
 
   ros::Publisher _lift_state_pub;
   ros::Publisher _door_request_pub;
@@ -77,7 +80,7 @@ private:
   std::unordered_map<std::string, DoorState::Ptr> _cabin_door_states;
 
   LiftState _lift_state;
-  LiftRequest::Ptr _lift_request;
+  LiftRequest::ConstPtr _lift_request;
   double _last_update_time = 0.0;
   // random start time offset to prevent state message crossfire
   double _last_pub_time = ((double)std::rand()) / ((double)(RAND_MAX));
@@ -115,6 +118,8 @@ private:
       std::unordered_map<std::string, DoorState::Ptr> shaft_door_states,
       std::unordered_map<std::string, DoorState::Ptr> cabin_door_states,
       std::string initial_floor_name);
+
+  void liftRequestCallback(const LiftRequest::ConstPtr &msg);
 
   /*
 
