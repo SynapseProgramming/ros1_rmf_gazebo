@@ -208,17 +208,15 @@ LiftCommon::LiftCommon(
   _door_state_sub = _ros_node.subscribe<DoorState>(
       "/door_states", 10, &LiftCommon::doorStateCallback, this);
 
-  /*
-          // Initial lift state
-          _lift_state.lift_name = _lift_name;
-          _lift_state.current_floor = _floor_names[0];
-          _lift_state.destination_floor = initial_floor_name;
-          _lift_state.door_state = LiftState::DOOR_CLOSED;
-          _lift_state.motion_state = LiftState::MOTION_STOPPED;
-          _lift_state.current_mode = LiftState::MODE_AGV;
-          for (const std::string &floor_name : _floor_names)
-          _lift_state.available_floors.push_back(floor_name);
-          */
+  // Initial lift state
+  _lift_state.lift_name = _lift_name;
+  _lift_state.current_floor = _floor_names[0];
+  _lift_state.destination_floor = initial_floor_name;
+  _lift_state.door_state = LiftState::DOOR_CLOSED;
+  _lift_state.motion_state = LiftState::MOTION_STOPPED;
+  _lift_state.current_mode = LiftState::MODE_AGV;
+  for (const std::string &floor_name : _floor_names)
+    _lift_state.available_floors.push_back(floor_name);
 }
 /*
 void LiftCommon::pub_lift_state(const double time) {
