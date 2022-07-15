@@ -93,12 +93,17 @@ target_link_libraries(gui_example_spawn_widget ${GAZEBO_LIBRARIES}
   ${PROTOBUF_LIBRARIES})
 
 
+add_library(lift src/lift.cpp)
+target_link_libraries(lift ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES} lift_common)
+add_dependencies(lift ${catkin_EXPORTED_TARGETS})
+
 
 install(
   TARGETS
   gui_example_spawn_widget
   rmf_sim_utils
   toggle_floors
+  lift
   DESTINATION
     ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION
