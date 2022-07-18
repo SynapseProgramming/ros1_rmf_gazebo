@@ -77,25 +77,25 @@ private:
   using Doors = std::unordered_map<std::string, DoorElement>;
 
   DoorMode requested_mode() const;
+
+  void publish_state(const uint32_t door_value, const ros::Time &time);
   /*
-      void publish_state(const uint32_t door_value, const rclcpp::Time &time);
+        double calculate_target_velocity(const double target,
+                                         const double current_position,
+                                         const double current_velocity,
+                                         const double dt);
 
-      double calculate_target_velocity(const double target,
-                                       const double current_position,
-                                       const double current_velocity,
-                                       const double dt);
+        DoorCommon(const std::string &door_name, rclcpp::Node::SharedPtr node,
+                   const MotionParams &params, const Doors &doors);
 
-      DoorCommon(const std::string &door_name, rclcpp::Node::SharedPtr node,
-                 const MotionParams &params, const Doors &doors);
+        bool all_doors_open();
 
-      bool all_doors_open();
+        bool all_doors_closed();
 
-      bool all_doors_closed();
-
-      rclcpp::Node::SharedPtr _ros_node;
-      rclcpp::Publisher<DoorState>::SharedPtr _door_state_pub;
-      rclcpp::Subscription<DoorRequest>::SharedPtr _door_request_sub;
-  */
+        rclcpp::Node::SharedPtr _ros_node;
+        rclcpp::Publisher<DoorState>::SharedPtr _door_state_pub;
+        rclcpp::Subscription<DoorRequest>::SharedPtr _door_request_sub;
+    */
   DoorState _state;
   DoorRequest _request;
 

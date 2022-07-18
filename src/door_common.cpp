@@ -37,19 +37,18 @@ std::vector<std::string> DoorCommon::joint_names() const {
 MotionParams &DoorCommon::params() { return _params; }
 
 DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
-/*
-
 
 void DoorCommon::publish_state(const uint32_t door_value,
-                               const rclcpp::Time &time) {
+                               const ros::Time &time) {
   if (!_initialized)
     return;
 
   _state.current_mode.value = door_value;
   _state.door_time = time;
-  _door_state_pub->publish(_state);
+  // TODO: uncomment this once the consructor has been ported over
+  // _door_state_pub->publish(_state);
 }
-
+/*
 DoorCommon::DoorCommon(const std::string &door_name,
                        rclcpp::Node::SharedPtr node, const MotionParams &params,
                        const Doors &doors)
