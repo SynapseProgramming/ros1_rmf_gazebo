@@ -199,7 +199,7 @@ LiftCommon::LiftCommon(
     std::cout << it.first << "  |  " << it.second << std::endl;
 
   // initialize pub & sub
-  _lift_state_pub = nh.advertise<DoorRequest>("/lift_states", 10);
+  _lift_state_pub = nh.advertise<LiftState>("/lift_states", 10);
 
   _door_request_pub = nh.advertise<DoorRequest>("/door_requests", 10);
 
