@@ -36,16 +36,11 @@ public:
 
     gazebo_ros_ =
         gazebo::GazeboRosPtr(new gazebo::GazeboRos(model, sdf, "Liftz"));
-    // _ros_node = gazebo_ros::Node::Get(sdf);
 
     gazebo_ros_->isInitialized();
-    std::cout << "PLUGIN LOADING!\n";
-
     _model = model;
 
-    // RCLCPP_INFO(_ros_node->get_logger(), "Loading LiftPlugin for [%s]",
-    //             _model->GetName().c_str());
-    std::cout << "loaded Lift plugin!\n";
+    ROS_INFO("Loading LiftPlugin for [%s]", _model->GetName().c_str());
 
     nptr = gazebo_ros_->node();
     n = *nptr;
@@ -53,18 +48,14 @@ public:
     // load Lift object
     _lift_common = LiftCommon::make(n, _model->GetName(), sdf);
     if (!_lift_common) {
-      std::cout << "Failed when loading lift plugin!\n";
-      // RCLCPP_ERROR(_ros_node->get_logger(), "Failed when loading [%s]",
-      //              _model->GetName().c_str());
+      ROS_INFO("Failed when loading [%s]", _model->GetName().c_str());
       return;
     }
 
     _cabin_joint_ptr = _model->GetJoint(_lift_common->get_joint_name());
     if (!_cabin_joint_ptr) {
-      std::cout << "model is missing joint!\n";
-      // RCLCPP_ERROR(_ros_node->get_logger(),
-      //              " -- Model is missing the joint [%s]",
-      //              _lift_common->get_joint_name().c_str());
+      ROS_INFO(" -- Model is missing the joint [%s]",
+               _lift_common->get_joint_name().c_str());
       return;
     }
 
@@ -72,9 +63,7 @@ public:
         std::bind(&LiftPlugin::on_update, this));
 
     _cabin_joint_ptr->SetPosition(0, _lift_common->get_elevation());
-    std::cout << "finished loading!\n";
-    // RCLCPP_INFO(_ros_node->get_logger(), "Finished loading [%s]",
-    //             _model->GetName().c_str());
+    ROS_INFO("Finished loading [%s]", _model->GetName().c_str());
 
     _initialized = true;
   }
