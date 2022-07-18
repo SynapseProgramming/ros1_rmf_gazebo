@@ -142,6 +142,7 @@ void LiftCommon::liftRequestCallback(const LiftRequest::ConstPtr &msg) {
 
   if (_floor_name_to_elevation.find(msg->destination_floor) ==
       _floor_name_to_elevation.end()) {
+    std::cout << "unvailable floor!\n";
     // RCLCPP_INFO(logger(), "Received request for unavailable floor [%s]",
     //             msg->destination_floor.c_str());
     return;
@@ -149,12 +150,14 @@ void LiftCommon::liftRequestCallback(const LiftRequest::ConstPtr &msg) {
 
   if (_lift_request) // Lift is still processing a previous request
   {
+    std::cout << "still working on prev request\n";
     // RCLCPP_INFO(logger(), "Failed to request: [%s] is busy at the moment",
     //             _lift_name.c_str());
     return;
   }
 
   _lift_request = std::move(msg);
+  std::cout << "lift moving!\n";
   // RCLCPP_INFO(logger(), "Lift [%s] requested at level [%s]",
   // _lift_name.c_str(),
   //             _lift_request->destination_floor.c_str());
@@ -170,8 +173,8 @@ void LiftCommon::doorStateCallback(const DoorState::ConstPtr &msg) {
 }
 
 LiftCommon::LiftCommon(
-    const std::string &lift_name, const std::string &joint_name,
-    const MotionParams &cabin_motion_params,
+    ros::NodeHandle &nh, const std::string &lift_name,
+    const std::string &joint_name, const MotionParams &cabin_motion_params,
     const std::vector<std::string> &floor_names,
     const std::unordered_map<std::string, double> &floor_name_to_elevation,
     std::unordered_map<std::string, std::vector<std::string>>
@@ -196,15 +199,14 @@ LiftCommon::LiftCommon(
     std::cout << it.first << "  |  " << it.second << std::endl;
 
   // initialize pub & sub
-  _lift_state_pub = _ros_node.advertise<DoorRequest>("/lift_states", 10);
+  _lift_state_pub = nh.advertise<DoorRequest>("/lift_states", 10);
 
-  _door_request_pub =
-      _ros_node.advertise<DoorRequest>("/adapter_door_requests", 10);
+  _door_request_pub = nh.advertise<DoorRequest>("/adapter_door_requests", 10);
 
-  _lift_request_sub = _ros_node.subscribe<LiftRequest>(
+  _lift_request_sub = nh.subscribe<LiftRequest>(
       "/lift_requests", 10, &LiftCommon::liftRequestCallback, this);
 
-  _door_state_sub = _ros_node.subscribe<DoorState>(
+  _door_state_sub = nh.subscribe<DoorState>(
       "/door_states", 10, &LiftCommon::doorStateCallback, this);
 
   // Initial lift state

@@ -20,6 +20,8 @@ private:
   gazebo::physics::ModelPtr _model;
   gazebo::physics::JointPtr _cabin_joint_ptr;
   // gazebo_ros::Node::SharedPtr _ros_node;
+  ros::NodeHandle n;
+  boost::shared_ptr<ros::NodeHandle> nptr;
 
   gazebo::GazeboRosPtr gazebo_ros_;
 
@@ -45,8 +47,11 @@ public:
     //             _model->GetName().c_str());
     std::cout << "loaded Lift plugin!\n";
 
+    nptr = gazebo_ros_->node();
+    n = *nptr;
+
     // load Lift object
-    _lift_common = LiftCommon::make(_model->GetName(), sdf);
+    _lift_common = LiftCommon::make(n, _model->GetName(), sdf);
     if (!_lift_common) {
       std::cout << "Failed when loading lift plugin!\n";
       // RCLCPP_ERROR(_ros_node->get_logger(), "Failed when loading [%s]",

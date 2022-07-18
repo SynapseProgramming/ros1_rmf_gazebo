@@ -35,8 +35,8 @@ public:
   };
 
   template <typename SdfPtrT>
-  static std::unique_ptr<LiftCommon> make(const std::string &lift_name,
-                                          SdfPtrT &sdf);
+  static std::unique_ptr<LiftCommon>
+  make(ros::NodeHandle &nh, const std::string &lift_name, SdfPtrT &sdf);
 
   void logger();
 
@@ -51,7 +51,7 @@ public:
   bool motion_state_changed();
 
 private:
-  ros::NodeHandle _ros_node;
+  // ros::NodeHandle _ros_node;
 
   ros::Subscriber _lift_request_sub;
   ros::Subscriber _door_state_sub;
@@ -103,8 +103,8 @@ private:
   void update_lift_door_state();
 
   LiftCommon(
-      const std::string &lift_name, const std::string &joint_name,
-      const MotionParams &cabin_motion_params,
+      ros::NodeHandle &nh, const std::string &lift_name,
+      const std::string &joint_name, const MotionParams &cabin_motion_params,
       const std::vector<std::string> &floor_names,
       const std::unordered_map<std::string, double> &floor_name_to_elevation,
       std::unordered_map<std::string, std::vector<std::string>>
@@ -123,7 +123,8 @@ private:
 
 template <typename SdfPtrT>
 
-std::unique_ptr<LiftCommon> LiftCommon::make(const std::string &lift_name,
+std::unique_ptr<LiftCommon> LiftCommon::make(ros::NodeHandle &nh,
+                                             const std::string &lift_name,
                                              SdfPtrT &sdf) {
   MotionParams cabin_motion_params;
   std::string joint_name;
@@ -171,9 +172,8 @@ std::unique_ptr<LiftCommon> LiftCommon::make(const std::string &lift_name,
                                             floor_elevation)) {
       std::cout << " -- Missing required floor name or elevation attributes\n ";
       // RCLCPP_ERROR(node->get_logger(),
-      //              " -- Missing required floor name or elevation attributes "
-      //              "for [%s] plugin",
-      //              lift_name.c_str());
+      //              " -- Missing required floor name or elevation attributes
+      //              " "for [%s] plugin", lift_name.c_str());
       return nullptr;
     }
     floor_names.push_back(floor_name);
@@ -221,11 +221,11 @@ std::unique_ptr<LiftCommon> LiftCommon::make(const std::string &lift_name,
     initial_floor_name = floor_names[0];
   }
 
-  std::unique_ptr<LiftCommon> lift(
-      new LiftCommon(lift_name, joint_name, cabin_motion_params, floor_names,
-                     floor_name_to_elevation, floor_name_to_shaft_door_name,
-                     floor_name_to_cabin_door_name, shaft_door_states,
-                     cabin_door_states, initial_floor_name));
+  std::unique_ptr<LiftCommon> lift(new LiftCommon(
+      nh, lift_name, joint_name, cabin_motion_params, floor_names,
+      floor_name_to_elevation, floor_name_to_shaft_door_name,
+      floor_name_to_cabin_door_name, shaft_door_states, cabin_door_states,
+      initial_floor_name));
 
   return lift;
 }
