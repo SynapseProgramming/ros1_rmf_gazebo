@@ -45,30 +45,27 @@ void DoorCommon::publish_state(const uint32_t door_value,
 
   _state.current_mode.value = door_value;
   _state.door_time = time;
-  // TODO: uncomment this once the consructor has been ported over
-  // _door_state_pub->publish(_state);
+  _door_state_pub.publish(_state);
 }
-/*
-DoorCommon::DoorCommon(const std::string &door_name,
-                       rclcpp::Node::SharedPtr node, const MotionParams &params,
-                       const Doors &doors)
-    : _ros_node(std::move(node)), _params(params), _doors(doors) {
+
+void DoorCommon::doorRequestCallback(const DoorRequest::ConstPtr &msg) {
+  if (msg->door_name == _state.door_name)
+    _request = *msg;
+}
+
+DoorCommon::DoorCommon(const std::string &door_name, ros::NodeHandle &node,
+                       const MotionParams &params, const Doors &doors)
+    : _params(params), _doors(doors) {
   _state.door_name = door_name;
   _request.requested_mode.value = DoorMode::MODE_CLOSED;
 
-  _door_state_pub = _ros_node->create_publisher<DoorState>(
-      "/door_states", rclcpp::SystemDefaultsQoS());
-
-  _door_request_sub = _ros_node->create_subscription<DoorRequest>(
-      "/door_requests", rclcpp::SystemDefaultsQoS(),
-      [&](DoorRequest::UniquePtr msg) {
-        if (msg->door_name == _state.door_name)
-          _request = *msg;
-      });
+  _door_state_pub = node.advertise<DoorState>("/door_states", 10);
+  _door_request_sub = node.subscribe<DoorRequest>(
+      "/door_requests", 10, &DoorCommon::doorRequestCallback, this);
 
   _initialized = true;
 }
-
+/*
 bool DoorCommon::all_doors_open() {
   for (const auto &door : _doors)
     if (std::abs(door.second.open_position - door.second.current_position) >
@@ -103,9 +100,8 @@ double DoorCommon::calculate_target_velocity(const double target,
 
 std::vector<DoorCommon::DoorUpdateResult>
 DoorCommon::update(const double time,
-                   const std::vector<DoorCommon::DoorUpdateRequest> &requests) {
-  double dt = time - _last_update_time;
-  _last_update_time = time;
+                   const std::vector<DoorCommon::DoorUpdateRequest> &requests)
+{ double dt = time - _last_update_time; _last_update_time = time;
 
   // Update simulation position and velocity of each joint and
   // calcuate target velocity for the same
@@ -123,7 +119,8 @@ DoorCommon::update(const double time,
             it->second.open_position, request.position, request.velocity, dt);
       } else {
         result.velocity = calculate_target_velocity(
-            it->second.closed_position, request.position, request.velocity, dt);
+            it->second.closed_position, request.position, request.velocity,
+dt);
       }
       results.push_back(result);
     } else {

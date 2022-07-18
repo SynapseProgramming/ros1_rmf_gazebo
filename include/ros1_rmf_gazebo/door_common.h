@@ -79,14 +79,18 @@ private:
   DoorMode requested_mode() const;
 
   void publish_state(const uint32_t door_value, const ros::Time &time);
+
+  void doorRequestCallback(const DoorRequest::ConstPtr &msg);
+
+  DoorCommon(const std::string &door_name, ros::NodeHandle &node,
+             const MotionParams &params, const Doors &doors);
   /*
         double calculate_target_velocity(const double target,
                                          const double current_position,
                                          const double current_velocity,
                                          const double dt);
 
-        DoorCommon(const std::string &door_name, rclcpp::Node::SharedPtr node,
-                   const MotionParams &params, const Doors &doors);
+
 
         bool all_doors_open();
 
@@ -96,6 +100,10 @@ private:
         rclcpp::Publisher<DoorState>::SharedPtr _door_state_pub;
         rclcpp::Subscription<DoorRequest>::SharedPtr _door_request_sub;
     */
+
+  ros::Publisher _door_state_pub;
+  ros::Subscriber _door_request_sub;
+
   DoorState _state;
   DoorRequest _request;
 
@@ -133,10 +141,10 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
 
   // Get the joint names and door type
   if (!get_element_required(sdf_clone, "door", door_element) ||
-      !get_sdf_attribute_required<std::string>(door_element, "left_joint_name",
-                                               left_door_joint_name) ||
-      !get_sdf_attribute_required<std::string>(door_element, "right_joint_name",
-                                               right_door_joint_name) ||
+      !get_sdf_attribute_required<std::string>(door_element,
+"left_joint_name", left_door_joint_name) ||
+      !get_sdf_attribute_required<std::string>(door_element,
+"right_joint_name", right_door_joint_name) ||
       !get_sdf_attribute_required<std::string>(door_element, "type",
                                                door_type)) {
     RCLCPP_ERROR(node->get_logger(),
@@ -159,8 +167,8 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
   std::unordered_set<std::string> joint_names;
   if (!left_door_joint_name.empty() && left_door_joint_name != "empty_joint")
     joint_names.insert(left_door_joint_name);
-  if (!right_door_joint_name.empty() && right_door_joint_name != "empty_joint")
-    joint_names.insert(right_door_joint_name);
+  if (!right_door_joint_name.empty() && right_door_joint_name !=
+"empty_joint") joint_names.insert(right_door_joint_name);
 
   Doors doors;
 
@@ -180,10 +188,10 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
       get_sdf_param_if_available<double>(element, "upper", upper_limit);
       DoorCommon::DoorElement door_element;
       if (joint_name == right_door_joint_name)
-        door_element = DoorCommon::DoorElement{lower_limit, upper_limit, true};
-      else if (joint_name == left_door_joint_name)
-        door_element = DoorCommon::DoorElement{lower_limit, upper_limit};
-      doors.insert({joint_name, door_element});
+        door_element = DoorCommon::DoorElement{lower_limit, upper_limit,
+true}; else if (joint_name == left_door_joint_name) door_element =
+DoorCommon::DoorElement{lower_limit, upper_limit}; doors.insert({joint_name,
+door_element});
     }
   };
 
