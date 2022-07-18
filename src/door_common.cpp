@@ -79,7 +79,7 @@ double DoorCommon::calculate_target_velocity(const double target,
 
   return door_v;
 }
-/*
+
 bool DoorCommon::all_doors_open() {
   for (const auto &door : _doors)
     if (std::abs(door.second.open_position - door.second.current_position) >
@@ -88,7 +88,7 @@ bool DoorCommon::all_doors_open() {
 
   return true;
 }
-
+/*
 bool DoorCommon::all_doors_closed() {
   for (const auto &door : _doors)
     if (std::abs(door.second.closed_position - door.second.current_position) >
