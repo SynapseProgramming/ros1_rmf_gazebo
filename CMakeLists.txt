@@ -102,13 +102,20 @@ target_link_libraries(lift ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRA
 add_dependencies(lift ${catkin_EXPORTED_TARGETS})
 
 
+add_library(door src/door.cpp)
+target_link_libraries(door ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES} door_common rmf_sim_utils)
+add_dependencies(door ${catkin_EXPORTED_TARGETS})
+
+
 install(
   TARGETS
   gui_example_spawn_widget
   rmf_sim_utils
   lift_common
+  door_common
   toggle_floors
   lift
+  door
   DESTINATION
     ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION
