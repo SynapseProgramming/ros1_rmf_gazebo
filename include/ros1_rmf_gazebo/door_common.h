@@ -37,11 +37,10 @@ public:
     double fmax;
   };
 
-  // template <typename SdfPtrT>
-  // static std::shared_ptr<DoorCommon> make(const std::string &door_name,
-  //                                         rclcpp::Node::SharedPtr node,
-  //                                         SdfPtrT &sdf);
-  //
+  template <typename SdfPtrT>
+  static std::shared_ptr<DoorCommon> make(const std::string &door_name,
+                                          ros::NodeHandle &node, SdfPtrT &sdf);
+
   void logger();
 
   std::vector<std::string> joint_names() const;
@@ -111,10 +110,10 @@ private:
   // Map of joint_name and corresponding DoorElement
   Doors _doors;
 };
-/*
+
 template <typename SdfPtrT>
 std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
-                                             rclcpp::Node::SharedPtr node,
+                                             ros::NodeHandle &node,
                                              SdfPtrT &sdf) {
   // We work with a clone to avoid const correctness issues with
   // get_sdf_param functions in utils.hpp
@@ -134,34 +133,38 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
 
   // Get the joint names and door type
   if (!get_element_required(sdf_clone, "door", door_element) ||
-      !get_sdf_attribute_required<std::string>(door_element,
-"left_joint_name", left_door_joint_name) ||
-      !get_sdf_attribute_required<std::string>(door_element,
-"right_joint_name", right_door_joint_name) ||
+      !get_sdf_attribute_required<std::string>(door_element, "left_joint_name",
+                                               left_door_joint_name) ||
+      !get_sdf_attribute_required<std::string>(door_element, "right_joint_name",
+                                               right_door_joint_name) ||
       !get_sdf_attribute_required<std::string>(door_element, "type",
                                                door_type)) {
-    RCLCPP_ERROR(node->get_logger(),
-                 " -- Missing required parameters for [%s] plugin",
-                 door_name.c_str());
+    std::cout << " -- Missing required parameters for this plugin: "
+              << door_name.c_str() << "\n";
+    // RCLCPP_ERROR(node->get_logger(),
+    //              " -- Missing required parameters for [%s] plugin",
+    //              door_name.c_str());
     return nullptr;
   }
 
   if ((left_door_joint_name == "empty_joint" &&
        right_door_joint_name == "empty_joint") ||
       (left_door_joint_name.empty() && right_door_joint_name.empty())) {
-    RCLCPP_ERROR(
-        node->get_logger(),
-        " -- Both door joint names are missing for [%s] plugin, at least one"
-        " is required",
-        door_name.c_str());
+    std::cout << " -- Both door joint names are missing for plugin, at least "
+                 "one is required\n";
+    // RCLCPP_ERROR(
+    //     node->get_logger(),
+    //     " -- Both door joint names are missing for [%s] plugin, at least one"
+    //     " is required",
+    //     door_name.c_str());
     return nullptr;
   }
 
   std::unordered_set<std::string> joint_names;
   if (!left_door_joint_name.empty() && left_door_joint_name != "empty_joint")
     joint_names.insert(left_door_joint_name);
-  if (!right_door_joint_name.empty() && right_door_joint_name !=
-"empty_joint") joint_names.insert(right_door_joint_name);
+  if (!right_door_joint_name.empty() && right_door_joint_name != "empty_joint")
+    joint_names.insert(right_door_joint_name);
 
   Doors doors;
 
@@ -181,25 +184,27 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
       get_sdf_param_if_available<double>(element, "upper", upper_limit);
       DoorCommon::DoorElement door_element;
       if (joint_name == right_door_joint_name)
-        door_element = DoorCommon::DoorElement{lower_limit, upper_limit,
-true}; else if (joint_name == left_door_joint_name) door_element =
-DoorCommon::DoorElement{lower_limit, upper_limit}; doors.insert({joint_name,
-door_element});
+        door_element = DoorCommon::DoorElement{lower_limit, upper_limit, true};
+      else if (joint_name == left_door_joint_name)
+        door_element = DoorCommon::DoorElement{lower_limit, upper_limit};
+      doors.insert({joint_name, door_element});
     }
   };
 
   // Get the joint limits from parent sdf
   auto parent = sdf->GetParent();
   if (!parent) {
-    RCLCPP_ERROR(node->get_logger(),
-                 "Unable to access parent sdf to retrieve joint limits");
+    std::cout << "Unable to access parent sdf to retrieve joint limits\n";
+    // RCLCPP_ERROR(node->get_logger(),
+    //              "Unable to access parent sdf to retrieve joint limits");
     return nullptr;
   }
 
   auto joint_element = parent->GetElement("joint");
   if (!joint_element) {
-    RCLCPP_ERROR(node->get_logger(),
-                 "Parent sdf missing required joint element");
+    std::cout << "Parent sdf missing required joint element\n";
+    // RCLCPP_ERROR(node->get_logger(),
+    //              "Parent sdf missing required joint element");
     return nullptr;
   }
 
@@ -214,9 +219,8 @@ door_element});
       new DoorCommon(door_name, node, params, doors));
 
   return door_common;
-
 }
-*/
+
 } // namespace rmf_building_sim_common
 
 #endif // RMF_BUILDING_SIM_COMMON__DOOR_COMMON_HPP
