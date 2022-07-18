@@ -43,9 +43,9 @@ public:
   //                                         SdfPtrT &sdf);
   //
   void logger();
-  //
-  // std::vector<std::string> joint_names() const;
-  //
+
+  std::vector<std::string> joint_names() const;
+
   // MotionParams &params();
   //
   // std::vector<DoorUpdateResult>

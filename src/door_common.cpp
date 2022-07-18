@@ -25,8 +25,6 @@ using namespace std::chrono_literals;
 namespace rmf_building_sim_common {
 
 void DoorCommon::logger() { std::cout << "door_ " << _state.door_name << "\n"; }
-/*
-DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
 
 std::vector<std::string> DoorCommon::joint_names() const {
   std::vector<std::string> joint_names;
@@ -35,6 +33,10 @@ std::vector<std::string> DoorCommon::joint_names() const {
 
   return joint_names;
 }
+
+/*
+DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
+
 
 MotionParams &DoorCommon::params() { return _params; }
 
