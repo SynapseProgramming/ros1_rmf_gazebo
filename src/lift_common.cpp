@@ -201,7 +201,7 @@ LiftCommon::LiftCommon(
   // initialize pub & sub
   _lift_state_pub = nh.advertise<DoorRequest>("/lift_states", 10);
 
-  _door_request_pub = nh.advertise<DoorRequest>("/adapter_door_requests", 10);
+  _door_request_pub = nh.advertise<DoorRequest>("/door_requests", 10);
 
   _lift_request_sub = nh.subscribe<LiftRequest>(
       "/lift_requests", 10, &LiftCommon::liftRequestCallback, this);
