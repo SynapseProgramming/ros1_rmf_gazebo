@@ -65,6 +65,20 @@ DoorCommon::DoorCommon(const std::string &door_name, ros::NodeHandle &node,
 
   _initialized = true;
 }
+
+double DoorCommon::calculate_target_velocity(const double target,
+                                             const double current_position,
+                                             const double current_velocity,
+                                             const double dt) {
+  double dx = target - current_position;
+  if (std::abs(dx) < _params.dx_min / 2.0)
+    dx = 0.0;
+
+  double door_v =
+      compute_desired_rate_of_change(dx, current_velocity, _params, dt);
+
+  return door_v;
+}
 /*
 bool DoorCommon::all_doors_open() {
   for (const auto &door : _doors)
@@ -84,19 +98,6 @@ bool DoorCommon::all_doors_closed() {
   return true;
 }
 
-double DoorCommon::calculate_target_velocity(const double target,
-                                             const double current_position,
-                                             const double current_velocity,
-                                             const double dt) {
-  double dx = target - current_position;
-  if (std::abs(dx) < _params.dx_min / 2.0)
-    dx = 0.0;
-
-  double door_v =
-      compute_desired_rate_of_change(dx, current_velocity, _params, dt);
-
-  return door_v;
-}
 
 std::vector<DoorCommon::DoorUpdateResult>
 DoorCommon::update(const double time,
