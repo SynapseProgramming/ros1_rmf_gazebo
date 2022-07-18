@@ -8,32 +8,22 @@
 #include <gazebo/rendering/rendering.hh>
 #include <gazebo/transport/transport.hh>
 
-// #include <gazebo_plugins/gazebo_ros_utils.h>
 #endif
 
 #include <gazebo/msgs/msgs.hh>
 
-// #include <gazebo_ros/node.hpp>
 #include <ros/ros.h>
-// #include <rclcpp/rclcpp.hpp>
-// #include <rmf_fleet_msgs/msg/fleet_state.hpp>
-// #include <rmf_fleet_msgs/msg/robot_state.hpp>
 
 #include <string>
 #include <unordered_map>
 
 using std::string;
-// using FleetState = rmf_fleet_msgs::msg::FleetState;
-// using RobotState = rmf_fleet_msgs::msg::RobotState;
 
 class ToggleFloors : public gazebo::GUIPlugin {
   Q_OBJECT
   gazebo::transport::NodePtr node;
   gazebo::transport::PublisherPtr visual_pub;
   std::unordered_map<string, std::atomic<bool>> floor_visibility;
-  // gazebo_ros::Node::SharedPtr ros_node;
-  // GazeboRosPtr gazebo_ros_;
-  // rclcpp::Subscription<FleetState>::SharedPtr fleet_state_sub;
 
 public:
   ToggleFloors() : GUIPlugin() {
@@ -47,23 +37,6 @@ public:
 
   void Load(sdf::ElementPtr sdf) {
     printf("ToggleFloors::Load()\n");
-    // ros_node = gazebo_ros::Node::Get(sdf);
-    // gazebo_ros_ = GazeboRosPtr(new GazeboRos(_parent, sdf, "FloorToggle"));
-
-    // toggle non-static robots
-    // fleet_state_sub = ros_node->create_subscription<FleetState>(
-    //     "/fleet_states", rclcpp::SystemDefaultsQoS(),
-    //     [&](FleetState::UniquePtr msg) {
-    //       bool visible;
-    //       gazebo::msgs::Visual visual_msg;
-    //       visual_msg.set_parent_name("world");
-    //       for (const RobotState &robot : msg->robots) {
-    //         visible = floor_visibility[robot.location.level_name];
-    //         visual_msg.set_name(robot.name);
-    //         visual_msg.set_visible(visible);
-    //         // visual_pub->Publish(visual_msg);
-    //       }
-    //     });
 
     QHBoxLayout *hbox = new QHBoxLayout;
 

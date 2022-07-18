@@ -51,8 +51,6 @@ public:
   bool motion_state_changed();
 
 private:
-  // ros::NodeHandle _ros_node;
-
   ros::Subscriber _lift_request_sub;
   ros::Subscriber _door_state_sub;
 
