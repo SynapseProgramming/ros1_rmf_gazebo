@@ -10,6 +10,8 @@
 #include "ros1_rmf_gazebo/LiftRequest.h"
 #include "ros1_rmf_gazebo/LiftState.h"
 
+#include <lb_navigation_msgs/LiftFeedback.h>
+
 #include "ros1_rmf_gazebo/utils.h"
 
 #include <iostream>
@@ -21,6 +23,7 @@ namespace rmf_building_sim_common {
 
 using LiftState = ros1_rmf_gazebo::LiftState;
 using LiftRequest = ros1_rmf_gazebo::LiftRequest;
+using LbLiftFeedback = lb_navigation_msgs::LiftFeedback;
 using DoorRequest = ros1_rmf_gazebo::DoorRequest;
 using DoorState = ros1_rmf_gazebo::DoorState;
 using DoorMode = ros1_rmf_gazebo::DoorMode;

@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_plugins
   std_srvs
   std_msgs
+  lb_navigation_msgs
   message_generation
 )
 
