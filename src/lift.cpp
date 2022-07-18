@@ -19,7 +19,6 @@ private:
   gazebo::event::ConnectionPtr _update_connection;
   gazebo::physics::ModelPtr _model;
   gazebo::physics::JointPtr _cabin_joint_ptr;
-  // gazebo_ros::Node::SharedPtr _ros_node;
   ros::NodeHandle n;
   boost::shared_ptr<ros::NodeHandle> nptr;
 
