@@ -35,9 +35,9 @@ std::vector<std::string> DoorCommon::joint_names() const {
 }
 
 MotionParams &DoorCommon::params() { return _params; }
-/*
-DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
 
+DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
+/*
 
 
 void DoorCommon::publish_state(const uint32_t door_value,
