@@ -42,7 +42,7 @@ public:
   //                                         rclcpp::Node::SharedPtr node,
   //                                         SdfPtrT &sdf);
   //
-  // rclcpp::Logger logger() const;
+  void logger();
   //
   // std::vector<std::string> joint_names() const;
   //
@@ -52,29 +52,29 @@ public:
   // update(const double time, const std::vector<DoorUpdateRequest> &request);
 
 private:
-  // struct DoorElement {
-  //   double closed_position;
-  //   double open_position;
-  //   double current_position;
-  //   double current_velocity;
-  //
-  //   DoorElement() {}
-  //
-  //   DoorElement(const double lower_limit, const double upper_limit,
-  //               const bool flip_direction = false)
-  //       : current_position(0.0), current_velocity(0.0) {
-  //     if (flip_direction) {
-  //       closed_position = lower_limit;
-  //       open_position = upper_limit;
-  //     } else {
-  //       closed_position = upper_limit;
-  //       open_position = lower_limit;
-  //     }
-  //   }
-  // };
+  struct DoorElement {
+    double closed_position;
+    double open_position;
+    double current_position;
+    double current_velocity;
+
+    DoorElement() {}
+
+    DoorElement(const double lower_limit, const double upper_limit,
+                const bool flip_direction = false)
+        : current_position(0.0), current_velocity(0.0) {
+      if (flip_direction) {
+        closed_position = lower_limit;
+        open_position = upper_limit;
+      } else {
+        closed_position = upper_limit;
+        open_position = lower_limit;
+      }
+    }
+  };
 
   // Map joint name to its DoorElement
-  // using Doors = std::unordered_map<std::string, DoorElement>;
+  using Doors = std::unordered_map<std::string, DoorElement>;
   /*
     DoorMode requested_mode() const;
 
@@ -95,22 +95,20 @@ private:
     rclcpp::Node::SharedPtr _ros_node;
     rclcpp::Publisher<DoorState>::SharedPtr _door_state_pub;
     rclcpp::Subscription<DoorRequest>::SharedPtr _door_request_sub;
+*/
+  DoorState _state;
+  DoorRequest _request;
 
-    DoorState _state;
-    DoorRequest _request;
+  MotionParams _params;
 
-    MotionParams _params;
+  double _last_update_time = 0.0;
+  // random start time offset to prevent state message crossfire
+  double _last_pub_time = ((double)std::rand()) / ((double)(RAND_MAX));
 
-    double _last_update_time = 0.0;
-    // random start time offset to prevent state message crossfire
-    double _last_pub_time = ((double)std::rand()) / ((double)(RAND_MAX));
+  bool _initialized = false;
 
-    bool _initialized = false;
-
-    // Map of joint_name and corresponding DoorElement
-    Doors _doors;
-
-    */
+  // Map of joint_name and corresponding DoorElement
+  Doors _doors;
 };
 /*
 template <typename SdfPtrT>

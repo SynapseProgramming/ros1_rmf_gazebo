@@ -24,9 +24,7 @@ using namespace std::chrono_literals;
 
 namespace rmf_building_sim_common {
 
-// rclcpp::Logger DoorCommon::logger() const {
-//   return rclcpp::get_logger("door_" + _state.door_name);
-// }
+void DoorCommon::logger() { std::cout << "door_ " << _state.door_name << "\n"; }
 /*
 DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
 
