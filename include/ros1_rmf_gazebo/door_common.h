@@ -139,24 +139,17 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
                                                right_door_joint_name) ||
       !get_sdf_attribute_required<std::string>(door_element, "type",
                                                door_type)) {
-    std::cout << " -- Missing required parameters for this plugin: "
-              << door_name.c_str() << "\n";
-    // RCLCPP_ERROR(node->get_logger(),
-    //              " -- Missing required parameters for [%s] plugin",
-    //              door_name.c_str());
+    ROS_INFO(" -- Missing required parameters for [%s] plugin",
+             door_name.c_str());
     return nullptr;
   }
 
   if ((left_door_joint_name == "empty_joint" &&
        right_door_joint_name == "empty_joint") ||
       (left_door_joint_name.empty() && right_door_joint_name.empty())) {
-    std::cout << " -- Both door joint names are missing for plugin, at least "
-                 "one is required\n";
-    // RCLCPP_ERROR(
-    //     node->get_logger(),
-    //     " -- Both door joint names are missing for [%s] plugin, at least one"
-    //     " is required",
-    //     door_name.c_str());
+    ROS_INFO(" -- Both door joint names are missing for [%s] plugin, at least "
+             "one is required. ",
+             door_name.c_str());
     return nullptr;
   }
 
@@ -195,16 +188,12 @@ std::shared_ptr<DoorCommon> DoorCommon::make(const std::string &door_name,
   auto parent = sdf->GetParent();
   if (!parent) {
     std::cout << "Unable to access parent sdf to retrieve joint limits\n";
-    // RCLCPP_ERROR(node->get_logger(),
-    //              "Unable to access parent sdf to retrieve joint limits");
     return nullptr;
   }
 
   auto joint_element = parent->GetElement("joint");
   if (!joint_element) {
     std::cout << "Parent sdf missing required joint element\n";
-    // RCLCPP_ERROR(node->get_logger(),
-    //              "Parent sdf missing required joint element");
     return nullptr;
   }
 

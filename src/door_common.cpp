@@ -124,11 +124,8 @@ DoorCommon::update(const double time,
       }
       results.push_back(result);
     } else {
-      std::cout << "ERROR: Received update request for uninitialized "
-                   "joint \n";
-      // RCLCPP_ERROR(logger(),
-      //              "Received update request for uninitialized joint [%s]",
-      //              request.joint_name.c_str());
+      ROS_INFO("Received update request for uninitialized joint[%s]",
+               request.joint_name.c_str());
     }
   }
 

@@ -34,21 +34,16 @@ public:
   }
 
   void Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf) override {
-    // auto _ros_node = gazebo_ros::Node::Get(sdf);
-    std::cout << "BEFORE ERROR\n";
     gazebo_ros_ =
         gazebo::GazeboRosPtr(new gazebo::GazeboRos(model, sdf, "Doorz"));
 
+    ROS_INFO("Door Plugin Loading!");
     gazebo_ros_->isInitialized();
-    std::cout << "PLUGIN LOADING!\n";
     _model = model;
-    std::cout << "loaded Door plugin!\n";
+    ROS_INFO("Door Plugin Loaded!");
 
     nptr = gazebo_ros_->node();
     n = *nptr;
-
-    // RCLCPP_INFO(_ros_node->get_logger(), "Loading DoorPlugin for [%s]",
-    //             _model->GetName().c_str());
 
     _door_common = DoorCommon::make(_model->GetName(), n, sdf);
 
@@ -58,11 +53,7 @@ public:
     for (const auto &joint_name : _door_common->joint_names()) {
       const auto joint = _model->GetJoint(joint_name);
       if (!joint) {
-        std::cout << " -- Model is missing the joint: " << joint_name.c_str()
-                  << "\n";
-        // RCLCPP_ERROR(_ros_node->get_logger(),
-        //              " -- Model is missing the joint [%s]",
-        //              joint_name.c_str());
+        ROS_INFO(" -- Model is missing the joint [%s]", joint_name.c_str());
         return;
       }
       _joints.insert(std::make_pair(joint_name, joint));
@@ -72,10 +63,7 @@ public:
 
     _update_connection = gazebo::event::Events::ConnectWorldUpdateBegin(
         std::bind(&DoorPlugin::on_update, this));
-    std::cout << "Finished loading!\n";
-
-    // RCLCPP_INFO(_ros_node->get_logger(), "Finished loading [%s]",
-    //             _model->GetName().c_str());
+    ROS_INFO("Finished loading [%s]", _model->GetName().c_str());
   }
 
 private:

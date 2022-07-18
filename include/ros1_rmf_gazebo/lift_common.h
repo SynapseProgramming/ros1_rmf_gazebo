@@ -51,8 +51,6 @@ public:
   bool motion_state_changed();
 
 private:
-  // ros::NodeHandle _ros_node;
-
   ros::Subscriber _lift_request_sub;
   ros::Subscriber _door_state_sub;
 
@@ -156,10 +154,8 @@ std::unique_ptr<LiftCommon> LiftCommon::make(ros::NodeHandle &nh,
   // load the floor name and elevation for each floor
   auto floor_element = sdf_clone;
   if (!get_element_required(sdf, "floor", floor_element)) {
-    std::cout << " -- Missing required floor element for plugin\n";
-    // RCLCPP_ERROR(node->get_logger(),
-    //              " -- Missing required floor element for [%s] plugin",
-    //              lift_name.c_str());
+    ROS_INFO(" -- Missing required floor element for [%s] plugin",
+             lift_name.c_str());
     return nullptr;
   }
 
@@ -170,10 +166,9 @@ std::unique_ptr<LiftCommon> LiftCommon::make(ros::NodeHandle &nh,
                                                  floor_name) ||
         !get_sdf_attribute_required<double>(floor_element, "elevation",
                                             floor_elevation)) {
-      std::cout << " -- Missing required floor name or elevation attributes\n ";
-      // RCLCPP_ERROR(node->get_logger(),
-      //              " -- Missing required floor name or elevation attributes
-      //              " "for [%s] plugin", lift_name.c_str());
+      ROS_INFO("-- Missing required floor name or elevation attributes for "
+               "[%s] plugin",
+               lift_name.c_str());
       return nullptr;
     }
     floor_names.push_back(floor_name);
@@ -188,12 +183,8 @@ std::unique_ptr<LiftCommon> LiftCommon::make(ros::NodeHandle &nh,
                 door_pair_element, "cabin_door", cabin_door_name) ||
             !get_sdf_attribute_required<std::string>(
                 door_pair_element, "shaft_door", shaft_door_name)) {
-
-          std::cout << " -- Missing required lift door attributes for plugin\n";
-          // RCLCPP_ERROR(
-          //     node->get_logger(),
-          //     " -- Missing required lift door attributes for [%s] plugin",
-          //     lift_name.c_str());
+          ROS_INFO(" -- Missing required lift door attributes for [%s] plugin",
+                   lift_name.c_str());
           return nullptr;
         }
         floor_name_to_cabin_door_name[floor_name].push_back(cabin_door_name);
@@ -214,10 +205,10 @@ std::unique_ptr<LiftCommon> LiftCommon::make(ros::NodeHandle &nh,
 
   if (std::find(floor_names.begin(), floor_names.end(), initial_floor_name) ==
       floor_names.end()) {
-    std::cout << "Initial floor is not available, changing to deafult\n";
-    // RCLCPP_WARN(node->get_logger(),
-    //             "Initial floor [%s] is not available, changing to deafult",
-    //             initial_floor_name.c_str());
+
+    ROS_INFO("Initial floor [%s] is not available, changing to default",
+             initial_floor_name.c_str());
+
     initial_floor_name = floor_names[0];
   }
 

@@ -142,25 +142,21 @@ void LiftCommon::liftRequestCallback(const LiftRequest::ConstPtr &msg) {
 
   if (_floor_name_to_elevation.find(msg->destination_floor) ==
       _floor_name_to_elevation.end()) {
-    std::cout << "unvailable floor!\n";
-    // RCLCPP_INFO(logger(), "Received request for unavailable floor [%s]",
-    //             msg->destination_floor.c_str());
+    ROS_INFO("Received request for unavailable floor [%s]",
+             msg->destination_floor.c_str());
     return;
   }
 
   if (_lift_request) // Lift is still processing a previous request
   {
-    std::cout << "still working on prev request\n";
-    // RCLCPP_INFO(logger(), "Failed to request: [%s] is busy at the moment",
-    //             _lift_name.c_str());
+    ROS_INFO("Failed to request: [%s] is busy at the moment",
+             _lift_name.c_str());
     return;
   }
 
   _lift_request = std::move(msg);
-  std::cout << "lift moving!\n";
-  // RCLCPP_INFO(logger(), "Lift [%s] requested at level [%s]",
-  // _lift_name.c_str(),
-  //             _lift_request->destination_floor.c_str());
+  ROS_INFO("Lift [%s] requested at level [%s]", _lift_name.c_str(),
+           _lift_request->destination_floor.c_str());
 }
 
 void LiftCommon::doorStateCallback(const DoorState::ConstPtr &msg) {
@@ -257,9 +253,8 @@ LiftCommon::LiftUpdateResult LiftCommon::update(const double time,
     if ((_lift_state.current_floor == desired_floor) &&
         (_lift_state.door_state == desired_door_state) &&
         (_lift_state.motion_state == LiftState::MOTION_STOPPED)) {
-      // RCLCPP_INFO(logger(), "Reached floor %s with doors %s",
-      //             desired_floor.c_str(),
-      //             desired_door_state == 0 ? "closed" : "open");
+      ROS_INFO("Reached floor %s with doors %s", desired_floor.c_str(),
+               (desired_door_state == 0 ? "closed" : "open"));
       _lift_request = nullptr;
     } else {
       _lift_state.destination_floor = desired_floor;
