@@ -98,11 +98,11 @@ bool DoorCommon::all_doors_closed() {
   return true;
 }
 
-/*
 std::vector<DoorCommon::DoorUpdateResult>
 DoorCommon::update(const double time,
-                   const std::vector<DoorCommon::DoorUpdateRequest> &requests)
-{ double dt = time - _last_update_time; _last_update_time = time;
+                   const std::vector<DoorCommon::DoorUpdateRequest> &requests) {
+  double dt = time - _last_update_time;
+  _last_update_time = time;
 
   // Update simulation position and velocity of each joint and
   // calcuate target velocity for the same
@@ -120,14 +120,15 @@ DoorCommon::update(const double time,
             it->second.open_position, request.position, request.velocity, dt);
       } else {
         result.velocity = calculate_target_velocity(
-            it->second.closed_position, request.position, request.velocity,
-dt);
+            it->second.closed_position, request.position, request.velocity, dt);
       }
       results.push_back(result);
     } else {
-      RCLCPP_ERROR(logger(),
-                   "Received update request for uninitialized joint [%s]",
-                   request.joint_name.c_str());
+      std::cout << "ERROR: Received update request for uninitialized "
+                   "joint \n";
+      // RCLCPP_ERROR(logger(),
+      //              "Received update request for uninitialized joint [%s]",
+      //              request.joint_name.c_str());
     }
   }
 
@@ -137,7 +138,7 @@ dt);
     const int32_t t_sec = static_cast<int32_t>(time);
     const uint32_t t_nsec =
         static_cast<uint32_t>((time - static_cast<double>(t_sec)) * 1e9);
-    const rclcpp::Time now{t_sec, t_nsec, RCL_ROS_TIME};
+    const ros::Time now = ros::Time(t_sec, t_nsec);
 
     if (all_doors_open()) {
       publish_state(DoorMode::MODE_OPEN, now);
@@ -150,5 +151,5 @@ dt);
 
   return results;
 }
-*/
+
 } // namespace rmf_building_sim_common
