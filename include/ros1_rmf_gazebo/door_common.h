@@ -91,13 +91,13 @@ private:
                                    const double dt);
 
   bool all_doors_open();
-  /*
-            bool all_doors_closed();
 
-            rclcpp::Node::SharedPtr _ros_node;
-            rclcpp::Publisher<DoorState>::SharedPtr _door_state_pub;
-            rclcpp::Subscription<DoorRequest>::SharedPtr _door_request_sub;
-        */
+  bool all_doors_closed();
+  /*
+              rclcpp::Node::SharedPtr _ros_node;
+              rclcpp::Publisher<DoorState>::SharedPtr _door_state_pub;
+              rclcpp::Subscription<DoorRequest>::SharedPtr _door_request_sub;
+          */
 
   ros::Publisher _door_state_pub;
   ros::Subscriber _door_request_sub;

@@ -88,7 +88,7 @@ bool DoorCommon::all_doors_open() {
 
   return true;
 }
-/*
+
 bool DoorCommon::all_doors_closed() {
   for (const auto &door : _doors)
     if (std::abs(door.second.closed_position - door.second.current_position) >
@@ -98,7 +98,7 @@ bool DoorCommon::all_doors_closed() {
   return true;
 }
 
-
+/*
 std::vector<DoorCommon::DoorUpdateResult>
 DoorCommon::update(const double time,
                    const std::vector<DoorCommon::DoorUpdateRequest> &requests)
