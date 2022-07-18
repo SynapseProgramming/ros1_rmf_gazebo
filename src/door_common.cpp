@@ -34,11 +34,11 @@ std::vector<std::string> DoorCommon::joint_names() const {
   return joint_names;
 }
 
+MotionParams &DoorCommon::params() { return _params; }
 /*
 DoorMode DoorCommon::requested_mode() const { return _request.requested_mode; }
 
 
-MotionParams &DoorCommon::params() { return _params; }
 
 void DoorCommon::publish_state(const uint32_t door_value,
                                const rclcpp::Time &time) {

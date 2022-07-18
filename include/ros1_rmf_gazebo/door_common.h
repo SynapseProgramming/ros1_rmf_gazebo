@@ -46,7 +46,7 @@ public:
 
   std::vector<std::string> joint_names() const;
 
-  // MotionParams &params();
+  MotionParams &params();
   //
   // std::vector<DoorUpdateResult>
   // update(const double time, const std::vector<DoorUpdateRequest> &request);
