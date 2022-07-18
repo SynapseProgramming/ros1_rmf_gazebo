@@ -77,6 +77,10 @@ add_library(lift_common src/lift_common.cpp)
 target_link_libraries(lift_common ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(lift_common ${catkin_EXPORTED_TARGETS})
 
+add_library(door_common src/door_common.cpp)
+target_link_libraries(door_common ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(door_common ${catkin_EXPORTED_TARGETS})
+
 
 add_library(toggle_floors SHARED ${headers_MOC} src/toggle_floors.cpp)
 target_link_libraries(toggle_floors ${GAZEBO_LIBRARIES}
