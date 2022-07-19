@@ -195,7 +195,7 @@ LiftCommon::LiftCommon(
     std::cout << it.first << "  |  " << it.second << std::endl;
 
   // initialize pub & sub
-  _lift_state_pub = nh.advertise<LiftState>("/lift_states", 10);
+  _lift_state_pub = nh.advertise<LbLiftFeedback>("/lift_states", 10);
 
   _door_request_pub = nh.advertise<DoorRequest>("/door_requests", 10);
 
@@ -215,7 +215,7 @@ LiftCommon::LiftCommon(
   for (const std::string &floor_name : _floor_names)
     _lift_state.available_floors.push_back(floor_name);
 }
-
+// TODO:  add in the lb msgs messages in here
 void LiftCommon::pub_lift_state(const double time) {
   _last_pub_time = time;
   const int32_t t_sec = static_cast<int32_t>(time);
@@ -223,7 +223,31 @@ void LiftCommon::pub_lift_state(const double time) {
       static_cast<uint32_t>((time - static_cast<double>(t_sec)) * 1e9);
   ros::Time now = ros::Time(t_sec, t_nsec);
   _lift_state.lift_time = now;
-  _lift_state_pub.publish(_lift_state);
+
+  _lb_lift_state.lift_id = _lift_state.lift_name;
+  _lb_lift_state.websocket_connected = true;
+
+  // set arrived as true if the lift has stopped and the doors are open
+  if (_lift_state.motion_state == LiftState::MOTION_STOPPED &&
+      _lift_state.door_state == LiftState::DOOR_OPEN)
+    _lb_lift_state.arrived = true;
+  else
+    _lb_lift_state.arrived = false;
+
+  // set door status
+  if (_lift_state.door_state == LiftState::DOOR_OPEN)
+    _lb_lift_state.door_status = LbLiftFeedback::OPENED;
+  // TODO: check if we have to check direction of opening/closing
+  if (_lift_state.door_state == LiftState::DOOR_MOVING)
+    _lb_lift_state.door_status = LbLiftFeedback::OPENING;
+
+  if (_lift_state.door_state == LiftState::DOOR_CLOSED)
+    _lb_lift_state.door_status = LbLiftFeedback::CLOSED;
+
+  // set lift destination
+  _lb_lift_state.lift_destination = _lift_state.destination_floor;
+  // TODO: add in more documentation if neccessary.
+  _lift_state_pub.publish(_lb_lift_state);
 }
 
 LiftCommon::LiftUpdateResult LiftCommon::update(const double time,

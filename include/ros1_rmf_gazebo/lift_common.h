@@ -65,7 +65,6 @@ private:
 
   MotionParams _cabin_motion_params;
   LiftState::_motion_state_type _old_motion_state;
-
   std::vector<std::string> _floor_names;
   std::unordered_map<std::string, double> _floor_name_to_elevation;
   std::unordered_map<std::string, std::vector<std::string>>
@@ -76,6 +75,7 @@ private:
   std::unordered_map<std::string, DoorState::ConstPtr> _cabin_door_states;
 
   LiftState _lift_state;
+  LbLiftFeedback _lb_lift_state;
   LiftRequest::ConstPtr _lift_request;
 
   double _last_update_time = 0.0;
