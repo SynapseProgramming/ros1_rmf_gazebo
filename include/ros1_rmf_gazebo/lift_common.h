@@ -76,6 +76,7 @@ private:
 
   LiftState _lift_state;
   LbLiftFeedback _lb_lift_state;
+  bool _door_state;
   LiftRequest::ConstPtr _lift_request;
 
   double _last_update_time = 0.0;

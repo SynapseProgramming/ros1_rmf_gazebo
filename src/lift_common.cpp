@@ -215,7 +215,6 @@ LiftCommon::LiftCommon(
   for (const std::string &floor_name : _floor_names)
     _lift_state.available_floors.push_back(floor_name);
 }
-// TODO:  add in the lb msgs messages in here
 void LiftCommon::pub_lift_state(const double time) {
   _last_pub_time = time;
   const int32_t t_sec = static_cast<int32_t>(time);
@@ -235,18 +234,26 @@ void LiftCommon::pub_lift_state(const double time) {
     _lb_lift_state.arrived = false;
 
   // set door status
-  if (_lift_state.door_state == LiftState::DOOR_OPEN)
+  if (_lift_state.door_state == LiftState::DOOR_OPEN) {
     _lb_lift_state.door_status = LbLiftFeedback::OPENED;
-  // TODO: check if we have to check direction of opening/closing
-  if (_lift_state.door_state == LiftState::DOOR_MOVING)
-    _lb_lift_state.door_status = LbLiftFeedback::OPENING;
-
-  if (_lift_state.door_state == LiftState::DOOR_CLOSED)
+    _door_state = true;
+  }
+  if (_lift_state.door_state == LiftState::DOOR_MOVING) {
+    // if previous previous state is (door closed), we are opening the doors
+    if (_door_state == false) {
+      _lb_lift_state.door_status = LbLiftFeedback::OPENING;
+    } else {
+      // otherwise, we are closing the doors
+      _lb_lift_state.door_status = LbLiftFeedback::CLOSING;
+    }
+  }
+  if (_lift_state.door_state == LiftState::DOOR_CLOSED) {
     _lb_lift_state.door_status = LbLiftFeedback::CLOSED;
+    _door_state = false;
+  }
 
   // set lift destination
   _lb_lift_state.lift_destination = _lift_state.destination_floor;
-  // TODO: add in more documentation if neccessary.
   _lift_state_pub.publish(_lb_lift_state);
 }
 
