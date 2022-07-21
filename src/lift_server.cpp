@@ -26,6 +26,7 @@ LiftServer::LiftServer()
   // to ensure door is open when floor is reached
 
   current_request.request_type = 1;
+  close_door_signal = false;
 
   door_timer = n.createTimer(
       ros::Duration(5.0), &LiftServer::closeDoorsCallback, this, true, false);
@@ -35,6 +36,15 @@ void LiftServer::liftStateCallback(
     const ros1_rmf_gazebo::LiftState::ConstPtr &msg) {
 
   lift_current_floor_ = msg->current_floor;
+  // close doors if the lift doors are fully opened and lift is stopped
+  if (msg->door_state == 2 && msg->motion_state == 0 &&
+      close_door_signal == false) {
+    closeDoors();
+    close_door_signal = true;
+  }
+  if (msg->door_state != 2) {
+    close_door_signal = false;
+  }
 }
 
 bool LiftServer::getLiftCallback(
@@ -60,7 +70,6 @@ bool LiftServer::getLiftCallback(
     current_request.destination_floor = robot_current_floor;
     lift_request_pub.publish(current_request);
   }
-  closeDoors();
 
   return true;
 }

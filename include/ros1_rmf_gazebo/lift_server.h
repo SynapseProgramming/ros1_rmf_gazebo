@@ -29,6 +29,7 @@ private:
   ros1_rmf_gazebo::LiftRequest current_request;
 
   std::string lift_current_floor_;
+  bool close_door_signal;
 
   ros::Timer door_timer;
 
