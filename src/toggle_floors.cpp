@@ -13,6 +13,7 @@
 #include <gazebo/msgs/msgs.hh>
 
 #include <ros/ros.h>
+#include <ros1_rmf_gazebo/LiftNames.h>
 
 #include <string>
 #include <unordered_map>
@@ -24,6 +25,8 @@ class ToggleFloors : public gazebo::GUIPlugin {
   gazebo::transport::NodePtr node;
   gazebo::transport::PublisherPtr visual_pub;
   std::unordered_map<string, std::atomic<bool>> floor_visibility;
+  std::set<string> all_lift_names;
+  ros::ServiceServer service;
 
 public:
   ToggleFloors() : GUIPlugin() {
@@ -37,7 +40,7 @@ public:
 
   void Load(sdf::ElementPtr sdf) {
     printf("ToggleFloors::Load()\n");
-
+    ros::NodeHandle n;
     QHBoxLayout *hbox = new QHBoxLayout;
 
     for (sdf::ElementPtr floor_ele = sdf->GetFirstElement(); floor_ele;
@@ -54,6 +57,7 @@ public:
           lift_door_name.substr(lift_door_name.find("_") + 1));
       string lift_name;
       std::getline(iss, lift_name, '_');
+      all_lift_names.insert(lift_name);
       std::cout << lift_name << "\n";
 
       std::vector<string> models;
@@ -78,6 +82,7 @@ public:
       hbox->addWidget(button);
     }
     setLayout(hbox);
+    service = n.advertiseService("liftnames", &ToggleFloors::getNames, this);
   }
 
   void button_clicked(QPushButton *button, string floor_name, string model_name,
@@ -94,6 +99,14 @@ public:
       visual_msg.set_name(model);
       visual_pub->Publish(visual_msg);
     }
+  }
+  bool getNames(ros1_rmf_gazebo::LiftNames::Request &req,
+                ros1_rmf_gazebo::LiftNames::Response &res) {
+    ROS_INFO("received lift names service request!");
+    for (auto it = all_lift_names.begin(); it != all_lift_names.end(); it++) {
+      res.lift_names.push_back(*it);
+    }
+    return true;
   }
 };
 
