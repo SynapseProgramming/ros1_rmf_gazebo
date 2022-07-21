@@ -35,6 +35,11 @@ add_message_files(
    LiftState.msg
  )
 
+ add_service_files(
+ FILES
+ LiftNames.srv
+ )
+
 generate_messages(
    DEPENDENCIES
    std_msgs
