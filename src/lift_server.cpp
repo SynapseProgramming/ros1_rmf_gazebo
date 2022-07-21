@@ -1,7 +1,9 @@
 #include "ros1_rmf_gazebo/lift_server.h"
 
 LiftServer::LiftServer()
-    : sc(n.serviceClient<ros1_rmf_gazebo::LiftNames>("liftnames")) {
+    : sc(n.serviceClient<ros1_rmf_gazebo::LiftNames>("liftnames")),
+      ss(n.advertiseService("do_you_lift", &LiftServer::getLiftCallback,
+                            this)) {
 
   ROS_INFO("LiftServer object has been created!");
   // call lift names service
@@ -15,6 +17,14 @@ LiftServer::LiftServer()
   } else {
     std::cout << "YES\n";
   }
+}
+
+bool LiftServer::getLiftCallback(
+    lb_navigation_msgs::LiftCommand::Request &req,
+    lb_navigation_msgs::LiftCommand::Response &res) {
+
+  ROS_INFO("received lift request!");
+  return true;
 }
 
 // void LiftServer::pclCallback(const sensor_msgs::PointCloud2::ConstPtr &msg) {
