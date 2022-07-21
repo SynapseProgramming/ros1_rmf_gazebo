@@ -22,10 +22,15 @@ public:
 
   void liftStateCallback(const ros1_rmf_gazebo::LiftState::ConstPtr &msg);
 
+  void closeDoors();
+  void closeDoorsCallback(const ros::TimerEvent &event);
+
 private:
   ros1_rmf_gazebo::LiftRequest current_request;
 
   std::string lift_current_floor_;
+
+  ros::Timer door_timer;
 
   ros::NodeHandle n;
   ros::ServiceClient sc;
