@@ -25,6 +25,8 @@ public:
 private:
   ros1_rmf_gazebo::LiftRequest current_request;
 
+  std::string lift_current_floor_;
+
   ros::NodeHandle n;
   ros::ServiceClient sc;
   ros::ServiceServer ss;

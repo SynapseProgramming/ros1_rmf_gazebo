@@ -22,7 +22,7 @@ LiftServer::LiftServer()
   }
 
   // lift request constants
-  current_request.session_id = 1;
+  current_request.session_id = "1";
   // to ensure door is open when floor is reached
   current_request.door_state = 2;
   current_request.request_type = 1;
@@ -31,25 +31,31 @@ LiftServer::LiftServer()
 void LiftServer::liftStateCallback(
     const ros1_rmf_gazebo::LiftState::ConstPtr &msg) {
 
-  std::cout << "lift state received!\n";
-  std::cout << msg->current_floor << "\n";
+  lift_current_floor_ = msg->current_floor;
 }
 
 bool LiftServer::getLiftCallback(
     lb_navigation_msgs::LiftCommand::Request &req,
     lb_navigation_msgs::LiftCommand::Response &res) {
   ROS_INFO("received lift request!");
-  // current_request.lift_name = lift_names[0];
   // fill up current request
   // TODO: always use the first lift in the vector for now.
+  current_request.lift_name = lift_names[0];
 
-  // std::string robot_current_floor = req.request.source_map;
-  // std::string robot_destination_floor = req.request.destination_map;
-  //
-  //
-  // current_request.destination_floor = req.request.
-  //
-  //                                     return true;
+  std::string robot_current_floor = req.source_map;
+  std::string robot_destination_floor = req.destination_map;
+
+  // if the lift is not at the floor that the robot is at, then we would move
+  // there first
+  if (lift_current_floor_ != robot_current_floor) {
+    ROS_INFO("Lift is moving to robot floor!");
+    current_request.destination_floor = robot_current_floor;
+    lift_request_pub.publish(current_request);
+  } else {
+    ROS_INFO("Lift is already at robot floor!");
+  }
+
+  return true;
 }
 
 int main(int argc, char **argv) {
