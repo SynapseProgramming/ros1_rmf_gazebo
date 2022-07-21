@@ -76,6 +76,16 @@ include_directories(
 
 link_directories(${GAZEBO_LIBRARY_DIRS})
 
+
+add_executable(lift_server  src/lift_server.cpp)
+add_dependencies(lift_server
+  ${catkin_EXPORTED_TARGETS}
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+)
+target_link_libraries(lift_server
+  ${catkin_LIBRARIES}
+)
+
 add_library(rmf_sim_utils src/utils.cpp)
 target_link_libraries(rmf_sim_utils ${GAZEBO_LIBRARIES})
 
@@ -126,6 +136,13 @@ install(
     ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION
     ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(
+  TARGETS
+    lift_server
+  RUNTIME DESTINATION
+    ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
