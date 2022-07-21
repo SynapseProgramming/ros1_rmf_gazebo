@@ -47,6 +47,15 @@ public:
       string floor_name = floor_ele->GetAttribute("name")->GetAsString();
       string model_name = floor_ele->GetAttribute("model_name")->GetAsString();
 
+      sdf::ElementPtr lift = floor_ele->GetFirstElement();
+
+      string lift_door_name = lift->GetAttribute("name")->GetAsString();
+      std::istringstream iss(
+          lift_door_name.substr(lift_door_name.find("_") + 1));
+      string lift_name;
+      std::getline(iss, lift_name, '_');
+      std::cout << lift_name << "\n";
+
       std::vector<string> models;
       auto model_ele = floor_ele->GetElement("model");
       while (model_ele) {
