@@ -58,6 +58,7 @@ private:
   ros::Subscriber _door_state_sub;
 
   ros::Publisher _lift_state_pub;
+  ros::Publisher _rmf_lift_state_pub;
   ros::Publisher _door_request_pub;
 
   std::string _lift_name;

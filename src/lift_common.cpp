@@ -197,6 +197,8 @@ LiftCommon::LiftCommon(
   // initialize pub & sub
   _lift_state_pub = nh.advertise<LbLiftFeedback>("/lift_states", 10);
 
+  _rmf_lift_state_pub = nh.advertise<LiftState>("/rmf_lift_states", 10),
+
   _door_request_pub = nh.advertise<DoorRequest>("/door_requests", 10);
 
   _lift_request_sub = nh.subscribe<LiftRequest>(
@@ -255,6 +257,7 @@ void LiftCommon::pub_lift_state(const double time) {
   // set lift destination
   _lb_lift_state.lift_destination = _lift_state.destination_floor;
   _lift_state_pub.publish(_lb_lift_state);
+  _rmf_lift_state_pub.publish(_lift_state);
 }
 
 LiftCommon::LiftUpdateResult LiftCommon::update(const double time,
