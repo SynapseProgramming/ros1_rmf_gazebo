@@ -29,9 +29,18 @@ public:
 
 private:
   ros1_rmf_gazebo::LiftRequest current_request;
+  ros1_rmf_gazebo::LiftState::ConstPtr lift_state;
 
   std::string lift_current_floor_;
+
+  int current_status;
+
+  std::string robot_current_floor;
+  std::string robot_destination_floor;
+  std::vector<std::string> lift_names;
+
   bool close_door_signal;
+  bool is_closing;
   bool start_sequence;
 
   ros::Timer door_timer;
@@ -43,7 +52,6 @@ private:
 
   ros::Subscriber lift_state_sub;
   ros::Publisher lift_request_pub;
-  std::vector<std::string> lift_names;
 };
 
 #endif /*                                                                      \

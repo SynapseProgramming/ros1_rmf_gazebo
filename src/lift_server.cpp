@@ -20,15 +20,18 @@ LiftServer::LiftServer()
   } else {
     std::cout << "YES\n";
   }
+  current_status = 0;
+  is_closing = false;
 
   // lift request constants
   current_request.session_id = "1";
   current_request.request_type = 1;
   close_door_signal = false;
   start_sequence = false;
+  lift_state = nullptr;
 
   door_timer = n.createTimer(
-      ros::Duration(5.0), &LiftServer::closeDoorsCallback, this, true, false);
+      ros::Duration(10.0), &LiftServer::closeDoorsCallback, this, true, false);
 
   sequence_timer =
       n.createTimer(ros::Duration(0.1), &LiftServer::sequenceCallback, this);
@@ -47,6 +50,9 @@ void LiftServer::liftStateCallback(
   if (msg->door_state != 2) {
     close_door_signal = false;
   }
+  if (msg->door_state == 0)
+    is_closing = false;
+  lift_state = std::move(msg);
 }
 
 bool LiftServer::getLiftCallback(
@@ -56,23 +62,12 @@ bool LiftServer::getLiftCallback(
   // Initialise the current lift request
   // TODO: always use the first lift in the vector for now.
   current_request.lift_name = lift_names[0];
-  current_request.door_state = 2;
 
-  std::string robot_current_floor = req.source_map;
-  std::string robot_destination_floor = req.destination_map;
+  robot_current_floor = req.source_map;
+  robot_destination_floor = req.destination_map;
 
-  // if the lift is not at the floor that the robot is at, then we would move
-  // there first
-  if (lift_current_floor_ != robot_current_floor) {
-    ROS_INFO("Lift is moving to robot floor!");
-    current_request.destination_floor = robot_current_floor;
-    lift_request_pub.publish(current_request);
-  } else {
-    ROS_INFO("Lift is already at robot floor!");
-    current_request.destination_floor = robot_current_floor;
-    lift_request_pub.publish(current_request);
-  }
-  // TODO: stopped here
+  // start the lift sequence
+  start_sequence = true;
 
   return true;
 }
@@ -85,12 +80,38 @@ void LiftServer::closeDoors() {
 
 void LiftServer::closeDoorsCallback(const ros::TimerEvent &event) {
   ROS_INFO("closing lift doors!");
+  is_closing = true;
   current_request.door_state = 0;
   lift_request_pub.publish(current_request);
 }
 
 void LiftServer::sequenceCallback(const ros::TimerEvent &event) {
-  ROS_INFO("sequence callback called!");
+  if (start_sequence == true) {
+    if (current_status == 0) {
+      // move to the current floor of the robot
+      ROS_INFO("Lift moving to robot floor!");
+      current_request.destination_floor = robot_current_floor;
+      current_request.door_state = 2;
+      lift_request_pub.publish(current_request);
+      current_status = 1;
+    } else if (current_status == 1 && is_closing == true) {
+      current_status = 2;
+    } else if (current_status == 2 && is_closing == false) {
+      // move to the destination floor
+      ROS_INFO("Lift moving to destination floor!");
+      current_request.destination_floor = robot_destination_floor;
+      current_request.door_state = 2;
+      is_closing = false;
+      lift_request_pub.publish(current_request);
+      current_status = 3;
+    } else if (current_status == 3 && lift_state->door_state == 2 &&
+               lift_state->motion_state == 0) {
+      // done with sequence. reset start sequence flag
+      ROS_INFO("Lift Sequence complete!");
+      current_status = 0;
+      start_sequence = false;
+    }
+  }
 }
 
 int main(int argc, char **argv) {
