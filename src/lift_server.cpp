@@ -14,7 +14,7 @@ LiftServer::LiftServer()
     ROS_INFO("Obtained lift names!");
     lift_names = srv.response.lift_names;
   } else {
-    std::cout << "YES\n";
+    ROS_INFO("No lifts available");
   }
   current_status = 0;
   is_closing = false;
@@ -58,6 +58,7 @@ bool LiftServer::getLiftCallback(
   // Initialise the current lift request
   // TODO: always use the first lift in the vector for now.
   current_request.lift_name = lift_names[0];
+  res.lift_allocated = current_request.lift_name;
 
   robot_current_floor = req.source_map;
   robot_destination_floor = req.destination_map;
