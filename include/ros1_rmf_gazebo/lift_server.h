@@ -25,13 +25,17 @@ public:
   void closeDoors();
   void closeDoorsCallback(const ros::TimerEvent &event);
 
+  void sequenceCallback(const ros::TimerEvent &event);
+
 private:
   ros1_rmf_gazebo::LiftRequest current_request;
 
   std::string lift_current_floor_;
   bool close_door_signal;
+  bool start_sequence;
 
   ros::Timer door_timer;
+  ros::Timer sequence_timer;
 
   ros::NodeHandle n;
   ros::ServiceClient sc;

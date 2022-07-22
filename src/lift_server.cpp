@@ -23,13 +23,15 @@ LiftServer::LiftServer()
 
   // lift request constants
   current_request.session_id = "1";
-  // to ensure door is open when floor is reached
-
   current_request.request_type = 1;
   close_door_signal = false;
+  start_sequence = false;
 
   door_timer = n.createTimer(
       ros::Duration(5.0), &LiftServer::closeDoorsCallback, this, true, false);
+
+  sequence_timer =
+      n.createTimer(ros::Duration(0.1), &LiftServer::sequenceCallback, this);
 }
 
 void LiftServer::liftStateCallback(
@@ -51,7 +53,7 @@ bool LiftServer::getLiftCallback(
     lb_navigation_msgs::LiftCommand::Request &req,
     lb_navigation_msgs::LiftCommand::Response &res) {
   ROS_INFO("received lift request!");
-  // fill up current request
+  // Initialise the current lift request
   // TODO: always use the first lift in the vector for now.
   current_request.lift_name = lift_names[0];
   current_request.door_state = 2;
@@ -70,6 +72,7 @@ bool LiftServer::getLiftCallback(
     current_request.destination_floor = robot_current_floor;
     lift_request_pub.publish(current_request);
   }
+  // TODO: stopped here
 
   return true;
 }
@@ -84,6 +87,10 @@ void LiftServer::closeDoorsCallback(const ros::TimerEvent &event) {
   ROS_INFO("closing lift doors!");
   current_request.door_state = 0;
   lift_request_pub.publish(current_request);
+}
+
+void LiftServer::sequenceCallback(const ros::TimerEvent &event) {
+  ROS_INFO("sequence callback called!");
 }
 
 int main(int argc, char **argv) {
