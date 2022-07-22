@@ -13,10 +13,6 @@ LiftServer::LiftServer()
   if (sc.call(srv)) {
     ROS_INFO("Obtained lift names!");
     lift_names = srv.response.lift_names;
-    // TODO: remove this print out code
-    for (int i = 0; i < lift_names.size(); i++) {
-      std::cout << lift_names[i] << "\n";
-    }
   } else {
     std::cout << "YES\n";
   }
